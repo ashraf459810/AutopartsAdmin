@@ -1,3 +1,4 @@
+import 'package:admin/UI/RequestStatusInfo/RequestInfo.dart';
 import 'package:admin/UI/Return/bloc/return_bloc.dart';
 import 'package:admin/models/GetAllReturn.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,10 @@ class _ReturnState extends State<Return> {
   DateTime dateTime1;
   DateTime dateTime2;
   String name;
+  String chosenstatus;
   bool visible = false;
   int num = 0;
-  String number;
+  int number;
   int pages = 0;
   int ssize = 12;
   ScrollController controller = ScrollController();
@@ -34,7 +36,7 @@ class _ReturnState extends State<Return> {
     return BlocProvider(
       create: (context) => ReturnBloc()
         ..add(GetReturnProductsEvent(
-            "", "", "", "", pages, "TAKE_INFO_FROM_CUSTOMER", ssize)),
+            "", "", "", 0, pages, "TAKE_INFO_FROM_CUSTOMER", ssize)),
       child: Column(
         children: [
           Container(
@@ -138,7 +140,7 @@ class _ReturnState extends State<Return> {
                         hintText: " Search by phone number",
                         border: InputBorder.none),
                     onChanged: (value) {
-                      number = value;
+                      number = int.parse(value);
                     },
                   ),
                 ),
@@ -149,30 +151,59 @@ class _ReturnState extends State<Return> {
                   width: size.width,
                   color: Colors.grey[200],
                   child: DropdownButton<String>(
-                    hint: Text("  select status"),
-                    items: <String>['A', 'B', 'C', 'D'].map((String value) {
+                    hint: Text(
+                      "  select status",
+                    ),
+                    items: <String>[
+                      'TAKE_INFO_FROM_CUSTOMER',
+                      ' TAKE_INFO_FROM_VENDOR_AND_ASK_FOR_DISCOUNT',
+                      'ASK_CUSTOMER_FOR_DISCOUNT',
+                      ' GET_PRODUCT_FROM_CUSTOMER',
+                      'RCHECK_PRODUCT',
+                      'RETURN_PRODUCT_TO_VENDOR',
+                      'RETURN_PRODUCT_TO_CUSTOMER',
+                      'HANDLE_PAYMENTS',
+                      'DONE'
+                    ].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: new Text(value),
+                        child: new Text(
+                          value,
+                          style: TextStyle(fontSize: 12),
+                        ),
                       );
                     }).toList(),
-                    onChanged: (_) {},
+                    onChanged: (value) {
+                      chosenstatus = value;
+                    },
                   ),
                 ),
                 SizedBox(height: size.height * 0.03),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: size.height * 0.06,
-                    width: size.width * 0.3,
-                    decoration: BoxDecoration(
-                        color: Colors.orange[800],
-                        borderRadius: BorderRadius.circular(40)),
-                    child: Center(
-                        child: Text(
-                      "Search",
-                      style: TextStyle(color: Colors.white),
-                    )),
+                Builder(
+                  builder: (context) => GestureDetector(
+                    onTap: () {
+                      context.read<ReturnBloc>().add(GetReturnProductsEvent(
+                            "${dateTime1.year}-${dateTime1.month}-${dateTime1.day}",
+                            "${dateTime2.year}-${dateTime2.month}-${dateTime2.day}",
+                            name != null ? name : "",
+                            number != null ? number : 0,
+                            pages,
+                            chosenstatus != null ? chosenstatus : "",
+                            ssize,
+                          ));
+                    },
+                    child: Container(
+                      height: size.height * 0.06,
+                      width: size.width * 0.3,
+                      decoration: BoxDecoration(
+                          color: Colors.orange[800],
+                          borderRadius: BorderRadius.circular(40)),
+                      child: Center(
+                          child: Text(
+                        "Search",
+                        style: TextStyle(color: Colors.white),
+                      )),
+                    ),
                   ),
                 ),
                 SizedBox(height: size.height * 0.01),
@@ -238,24 +269,41 @@ class _ReturnState extends State<Return> {
                           color: Colors.white,
                           child: ListView.builder(
                             itemCount: returnrequests.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                      "${returnrequests[index].creationDate.day}/${returnrequests[index].creationDate.month}/${returnrequests[index].creationDate.year}"
-                                          .toString()),
-                                  Text(returnrequests[index].vendor.fullName),
-                                  Text(returnrequests[index].vendor.fullName),
-                                  Text(returnrequests[index].id.toString()),
-                                  Text(
-                                    returnrequests[index].status.substring(17),
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                ],
+                            itemBuilder: (context, index) => InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => RequestInfo(
+                                      returnrequest: returnrequests[index]),
+                                ));
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        "${returnrequests[index].creationDate.day}/${returnrequests[index].creationDate.month}/${returnrequests[index].creationDate.year}"
+                                            .toString()),
+                                    Text(returnrequests[index].vendor.fullName),
+                                    Text(returnrequests[index].vendor.fullName),
+                                    Text(
+                                        "    ${returnrequests[index].id.toString()}"),
+                                    Flexible(
+                                      child: Container(
+                                        width: size.width * 0.15,
+                                        child: Text(
+                                          returnrequests[index].status,
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontSize: 6,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

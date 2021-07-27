@@ -1,5 +1,3 @@
-
-
 import 'package:admin/Core/AppExcepition.dart';
 import 'package:admin/Data/HTTP_Helper/Http_Helper.dart';
 import 'package:connectivity/connectivity.dart';
@@ -7,7 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
 
 class IHttpHlper implements HttpHelper {
-  final String _baseUrl = "http://meshwar.bitsblend.org/api";
+  final String _baseUrl = "";
   @override
   Future getrequest(String url) async {
     var responseJson;
@@ -22,7 +20,7 @@ class IHttpHlper implements HttpHelper {
         throw NoInternet("");
     }
 
-    final response = await http.get(Uri.parse(  url));
+    final response = await http.get(Uri.parse(url));
     print(response.statusCode);
     print("here from http $url");
 
@@ -45,6 +43,8 @@ class IHttpHlper implements HttpHelper {
     }
 
     final response = await http.post(Uri.parse(_baseUrl + url));
+    print(response.statusCode);
+    print("here from http $url");
     responseJson = returnResponse(response);
 
     return responseJson;
