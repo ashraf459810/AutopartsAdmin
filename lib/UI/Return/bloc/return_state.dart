@@ -59,3 +59,8 @@ class AddNotForTodoState extends ReturnState {
   final ReturnProcessModel returnProcessModel;
   AddNotForTodoState(this.returnProcessModel);
 }
+
+class GetReturnProductDetailsState extends ReturnState {
+  final ReturnRequestModel requestModel;
+  GetReturnProductDetailsState(this.requestModel);
+}

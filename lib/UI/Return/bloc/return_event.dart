@@ -56,14 +56,13 @@ class IsproductReturnedEvent extends ReturnEvent {
   final int todoid;
   final bool isproductreturned;
   final int transcost;
-  IsproductReturnedEvent(this.isproductreturned, this.todoid, this.transcost);
+  IsproductReturnedEvent([this.isproductreturned, this.todoid, this.transcost]);
 }
 
 class InformTransportCompanyEvent extends ReturnEvent {
-  final String tocustomerorvendor;
   final int todoid;
 
-  InformTransportCompanyEvent(this.tocustomerorvendor, this.todoid);
+  InformTransportCompanyEvent(this.todoid);
 }
 
 class AddNotForTodoEvent extends ReturnEvent {
@@ -71,4 +70,9 @@ class AddNotForTodoEvent extends ReturnEvent {
   final String note;
   final int todoid;
   AddNotForTodoEvent(this.admin, this.note, this.todoid);
+}
+
+class GetReturnProductDetailsEvent extends ReturnEvent {
+  final int todoid;
+  GetReturnProductDetailsEvent(this.todoid);
 }

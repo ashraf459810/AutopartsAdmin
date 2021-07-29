@@ -35,8 +35,7 @@ class _ReturnState extends State<Return> {
     var size = MediaQuery.of(context).size;
     return BlocProvider(
       create: (context) => ReturnBloc()
-        ..add(GetReturnProductsEvent(
-            "", "", "", 0, pages, "TAKE_INFO_FROM_CUSTOMER", ssize)),
+        ..add(GetReturnProductsEvent("", "", "", 0, pages, "", ssize)),
       child: Column(
         children: [
           Container(
@@ -174,6 +173,7 @@ class _ReturnState extends State<Return> {
                       );
                     }).toList(),
                     onChanged: (value) {
+                      print("here");
                       chosenstatus = value;
                     },
                   ),
@@ -182,6 +182,7 @@ class _ReturnState extends State<Return> {
                 Builder(
                   builder: (context) => GestureDetector(
                     onTap: () {
+                      print(chosenstatus);
                       context.read<ReturnBloc>().add(GetReturnProductsEvent(
                             "${dateTime1.year}-${dateTime1.month}-${dateTime1.day}",
                             "${dateTime2.year}-${dateTime2.month}-${dateTime2.day}",
@@ -273,7 +274,8 @@ class _ReturnState extends State<Return> {
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => RequestInfo(
-                                      returnrequest: returnrequests[index]),
+                                    todoid: returnrequests[index].id,
+                                  ),
                                 ));
                               },
                               child: Padding(
@@ -286,8 +288,20 @@ class _ReturnState extends State<Return> {
                                     Text(
                                         "${returnrequests[index].creationDate.day}/${returnrequests[index].creationDate.month}/${returnrequests[index].creationDate.year}"
                                             .toString()),
-                                    Text(returnrequests[index].vendor.fullName),
-                                    Text(returnrequests[index].vendor.fullName),
+                                    Flexible(
+                                        child: Container(
+                                            width: size.width * 0.2,
+                                            child: Text(returnrequests[index]
+                                                .vendor
+                                                .fullName))),
+                                    Flexible(
+                                      child: Container(
+                                        width: size.width * 0.2,
+                                        child: Text(returnrequests[index]
+                                            .customer
+                                            .fullName),
+                                      ),
+                                    ),
                                     Text(
                                         "    ${returnrequests[index].id.toString()}"),
                                     Flexible(

@@ -108,7 +108,7 @@ class Content {
   Customer customer;
   Customer vendor;
   Item item;
-  int transportCosts;
+  double transportCosts;
   dynamic amountToCollect;
   List<Note> notes;
   List<PaymentTodo> paymentTodos;
@@ -271,7 +271,7 @@ class Note {
 
   factory Note.fromJson(Map<String, dynamic> json) => Note(
         id: json["id"],
-        admin: Customer.fromJson(json["admin"]),
+        // admin: Customer.fromJson(json["admin"]),
         note: json["note"],
       );
 
