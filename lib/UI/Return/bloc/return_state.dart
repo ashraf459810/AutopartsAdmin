@@ -7,7 +7,8 @@ class ReturnInitial extends ReturnState {}
 
 class GetReturnProductsState extends ReturnState {
   final GetAllReturn getAllReturn;
-  GetReturnProductsState(this.getAllReturn);
+  final List<Content> requests;
+  GetReturnProductsState(this.getAllReturn, this.requests);
 }
 
 class Loading extends ReturnState {}
@@ -20,6 +21,11 @@ class Error extends ReturnState {
 class TalkeToVendorState extends ReturnState {
   final ReturnProcessModel returnProcessModel;
   TalkeToVendorState(this.returnProcessModel);
+}
+
+class AllReturnState extends ReturnState {
+  final ReturnRequestModel returnRequestModel;
+  AllReturnState(this.returnRequestModel);
 }
 
 class VendorAcceptDiscountState extends ReturnState {

@@ -241,7 +241,7 @@ class _ReturnState extends State<Return> {
                 return Center(child: Text(state.error));
               }
               if (state is GetReturnProductsState) {
-                returnrequests = state.getAllReturn.content;
+                returnrequests = state.requests;
               }
               return NotificationListener<ScrollNotification>(
                   onNotification: (notification) {
@@ -252,23 +252,21 @@ class _ReturnState extends State<Return> {
                       print(pages);
 
                       context.read<ReturnBloc>().add(GetReturnProductsEvent(
-                          dateTime1.toString(),
-                          dateTime2.toString(),
-                          name,
-                          number,
-                          pages,
-                          "",
-                          ssize));
+                          '', '', '', 0, pages, "", ssize));
                     }
 
                     return false;
                   },
                   child: returnrequests.isNotEmpty
                       ? Container(
-                          height: size.height * 0.6,
+                          height: size.height * 0.5,
                           width: size.width,
                           color: Colors.white,
                           child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            physics: ScrollPhysics(
+                                parent: AlwaysScrollableScrollPhysics()),
+                            controller: controller,
                             itemCount: returnrequests.length,
                             itemBuilder: (context, index) => InkWell(
                               onTap: () {

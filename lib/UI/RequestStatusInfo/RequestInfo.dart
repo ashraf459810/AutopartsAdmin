@@ -1,4 +1,5 @@
 import 'package:admin/UI/Return/bloc/return_bloc.dart';
+import 'package:admin/models/ReturnProcessModel.dart';
 
 import 'package:admin/models/ReturnRequestModel.dart';
 
@@ -26,19 +27,10 @@ class _RequestInfoState extends State<RequestInfo> {
   bool isyes = false;
   String status;
   String transcost;
-  List<String> actions = [
-    "TAKE_INFO_FROM_CUSTOMER",
-    "TAKE_INFO_FROM_VENDOR_AND_ASK_FOR_DISCOUNT",
-    "ASK_CUSTOMER_FOR_DISCOUNT",
-    "GET_PRODUCT_FROM_CUSTOMER",
-    "CHECK_PRODUCT",
-    "RETURN_PRODUCT_TO_VENDOR",
-    "RETURN_PRODUCT_TO_CUSTOMER",
-    "HANDLE_PAYMENTS",
-    "DONE"
-  ];
+
   List<dynamic> notes = [];
   ReturnRequestModel returnRequestModel;
+  ReturnProcessModel returnProcessModel;
   bool vendordiscount = false;
   @override
   void initState() {
@@ -63,15 +55,38 @@ class _RequestInfoState extends State<RequestInfo> {
                   return Center(child: CircularProgressIndicator());
                 }
                 if (state is Error) {
-                  return Center(child: Text(state.error));
+                  return Container(
+                      height: size.height,
+                      child: Center(child: Text(state.error)));
+                }
+                if (state is AllReturnState) {
+                  isyes = false;
+                  iscustomeracceptdiscount = false;
+                  vendordiscount = false;
+                  isproductreturned = false;
+                  returnRequestModel = state.returnRequestModel;
+                  status = state.returnRequestModel.status;
+                  print(
+                      "${state.returnRequestModel.status} here the status from the state");
+                  if (state.returnRequestModel.status ==
+                      "ASK_CUSTOMER_FOR_DISCOUNT") {
+                    iscustomeracceptdiscount = true;
+                  }
+                  if (state.returnRequestModel.status == "CHECK_PRODUCT") {
+                    print("here from the state ");
+                    isproductreturned = true;
+                  }
+                  if (state.returnRequestModel.status ==
+                      "TAKE_INFO_FROM_VENDOR_AND_ASK_FOR_DISCOUNT") {
+                    vendordiscount = true;
+                  }
                 }
                 if (state is GetReturnProductDetailsState) {
+                  print("here the details state ");
                   returnRequestModel = state.requestModel;
                   notes = state.requestModel.notes;
                   status = state.requestModel.status;
-                  if (state.requestModel.status == "TAKE_INFO_FROM_CUSTOMER") {
-                    vendordiscount = true;
-                  }
+
                   if (state.requestModel.status ==
                       "ASK_CUSTOMER_FOR_DISCOUNT") {
                     iscustomeracceptdiscount = true;
@@ -79,6 +94,10 @@ class _RequestInfoState extends State<RequestInfo> {
                   if (state.requestModel.status == "CHECK_PRODUCT") {
                     print("here from the state ");
                     isproductreturned = true;
+                  }
+                  if (state.requestModel.status ==
+                      "TAKE_INFO_FROM_VENDOR_AND_ASK_FOR_DISCOUNT") {
+                    vendordiscount = true;
                   }
                 }
                 return Column(
@@ -149,22 +168,43 @@ class _RequestInfoState extends State<RequestInfo> {
                       Text("           Enter your note"),
                       SizedBox(height: size.height * 0.005),
                       Padding(
-                        padding: const EdgeInsets.only(left: 40),
-                        child: Container(
-                          height: size.height * 0.05,
-                          width: size.width * 0.8,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(0),
-                              color: Colors.grey[200]),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                                hintText: "   Add your note here",
-                                border: InputBorder.none),
-                            keyboardType: TextInputType.text,
-                            onChanged: (value) {
-                              note = value;
-                            },
-                          ),
+                        padding: const EdgeInsets.only(left: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              color: Colors.grey[200],
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: size.height * 0.05,
+                                    width: size.width * 0.75,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(0),
+                                        color: Colors.grey[200]),
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                          hintText: "   Add your note here",
+                                          border: InputBorder.none),
+                                      keyboardType: TextInputType.text,
+                                      onChanged: (value) {
+                                        note = value;
+                                      },
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // context.read<ReturnBloc>().add(AddNotForTodoEvent(, note, widget.todoid))
+                                    },
+                                    child: Icon(
+                                      Icons.send_outlined,
+                                      color: Colors.orange,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -192,6 +232,29 @@ class _RequestInfoState extends State<RequestInfo> {
                                         onTap: () {
                                           isyes = true;
                                           setState(() {});
+                                          if (isproductreturned == true &&
+                                              transcost != null) {
+                                            context.read<ReturnBloc>().add(
+                                                IsproductReturnedEvent(
+                                                    true,
+                                                    widget.todoid,
+                                                    int.parse(transcost)));
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg: "please enter the cost",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.CENTER,
+                                                backgroundColor: Colors.red,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                          }
+                                          if (iscustomeracceptdiscount) {
+                                            context.read<ReturnBloc>().add(
+                                                    IsCustomerAcceptDiscountEvent(
+                                                  true,
+                                                  widget.todoid,
+                                                ));
+                                          }
                                         },
                                         child: Container(
                                           color: Colors.green,
@@ -209,12 +272,10 @@ class _RequestInfoState extends State<RequestInfo> {
                                           ? GestureDetector(
                                               onTap: () {
                                                 vendordiscount
-                                                    ? context
-                                                        .read<ReturnBloc>()
-                                                        .add(
-                                                            VendorNotAcceptDiscountEvent(
-                                                                false,
-                                                                widget.todoid))
+                                                    ? context.read<ReturnBloc>().add(
+                                                        VendorNotAcceptDiscountEvent(
+                                                            false,
+                                                            widget.todoid))
                                                     : iscustomeracceptdiscount
                                                         ? context
                                                             .read<ReturnBloc>()
@@ -222,25 +283,37 @@ class _RequestInfoState extends State<RequestInfo> {
                                                                 false,
                                                                 widget.todoid))
                                                         : isproductreturned
-                                                            ? context.read<ReturnBloc>().add(
+                                                            ? transcost != null
+                                                                ? context.read<ReturnBloc>().add(
                                                                     IsproductReturnedEvent(
-                                                                  false,
-                                                                  widget.todoid,
-                                                                ))
-                                                            // ignore: unnecessary_statements
-                                                            : Fluttertoast.showToast(
-                                                                msg:
-                                                                    "please enter the cost",
-                                                                toastLength: Toast
-                                                                    .LENGTH_SHORT,
-                                                                gravity:
-                                                                    ToastGravity
+                                                                        false,
+                                                                        widget
+                                                                            .todoid,
+                                                                        int.parse(
+                                                                            transcost)))
+                                                                // ignore: unnecessary_statements
+                                                                : Fluttertoast.showToast(
+                                                                    msg:
+                                                                        "please enter the cost",
+                                                                    toastLength:
+                                                                        Toast
+                                                                            .LENGTH_SHORT,
+                                                                    gravity: ToastGravity
                                                                         .CENTER,
-                                                                backgroundColor:
-                                                                    Colors.red,
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .red,
+                                                                    textColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    fontSize:
+                                                                        16.0)
+                                                            : Fluttertoast.showToast(
+                                                                msg: "please enter the cost",
+                                                                toastLength: Toast.LENGTH_SHORT,
+                                                                gravity: ToastGravity.CENTER,
+                                                                backgroundColor: Colors.red,
+                                                                textColor: Colors.white,
                                                                 fontSize: 16.0);
                                               },
                                               child: Container(
@@ -312,7 +385,7 @@ class _RequestInfoState extends State<RequestInfo> {
                         child: Builder(
                           builder: (context) => InkWell(
                               onTap: () {
-                                switch (nextaction) {
+                                switch (status) {
                                   case "TAKE_INFO_FROM_CUSTOMER":
                                     context
                                         .read<ReturnBloc>()
@@ -334,11 +407,28 @@ class _RequestInfoState extends State<RequestInfo> {
                                             fontSize: 16.0);
                                     break;
                                   case "CHECK_PRODUCT":
-                                    context.read<ReturnBloc>().add(
-                                        AutopartCheckTheProductEvent(
-                                            widget.todoid));
+                                    transcost != null
+                                        ? context.read<ReturnBloc>().add(
+                                            IsproductReturnedEvent(
+                                                true,
+                                                widget.todoid,
+                                                int.parse(transcost)))
+                                        : Fluttertoast.showToast(
+                                            msg: "please enter the cost",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+
                                     break;
                                   case "RETURN_PRODUCT_TO_VENDOR":
+                                    context.read<ReturnBloc>().add(
+                                        InformTransportCompanyEvent(
+                                            widget.todoid));
+                                    break;
+
+                                  case "GET_PRODUCT_FROM_CUSTOMER":
                                     context.read<ReturnBloc>().add(
                                         InformTransportCompanyEvent(
                                             widget.todoid));
@@ -348,7 +438,6 @@ class _RequestInfoState extends State<RequestInfo> {
                                         InformTransportCompanyEvent(
                                             widget.todoid));
                                     break;
-                                  case "RETURN_PRODUCT":
                                 }
                               },
                               child: Container(
@@ -359,15 +448,13 @@ class _RequestInfoState extends State<RequestInfo> {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(0))),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.arrow_forward_ios),
                                     status != null
                                         ? Flexible(
                                             child: Text(
-                                            selectaction(status),
-                                            style: TextStyle(fontSize: 10),
+                                            "OK",
+                                            style: TextStyle(fontSize: 25),
                                           ))
                                         : Container()
                                   ],
@@ -417,20 +504,5 @@ class _RequestInfoState extends State<RequestInfo> {
         ),
       ),
     );
-  }
-
-  String selectaction(String status) {
-    print("$status here the status");
-    for (var i = 0; i < actions.length; i++) {
-      if (status == actions[i]) {
-        print("here from the func");
-        if (status == "CHECK_PRODUCT") {
-          return "RETURN PRODUCT";
-        }
-        nextaction = actions[i + 1];
-        return nextaction;
-      }
-    }
-    return "no aactions";
   }
 }

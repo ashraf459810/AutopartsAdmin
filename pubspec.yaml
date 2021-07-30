@@ -38,7 +38,7 @@ dependencies:
   fluttertoast: ^3.1.0
   get_it: ^3.0.1
   charts_flutter: ^0.10.0
-  flutter_bloc: ^7.0.0
+  flutter_bloc: ^7.1.0
   analyzer: ^0.39.14
   flutter_spinkit: "^4.0.0"
   requests: ^3.3.0
