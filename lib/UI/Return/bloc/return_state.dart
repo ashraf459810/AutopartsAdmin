@@ -62,11 +62,11 @@ class InformTransportCompanyState extends ReturnState {
 }
 
 class AddNotForTodoState extends ReturnState {
-  final ReturnProcessModel returnProcessModel;
-  AddNotForTodoState(this.returnProcessModel);
+  final AddNote addNote;
+  AddNotForTodoState(this.addNote);
 }
 
 class GetReturnProductDetailsState extends ReturnState {
-  final ReturnRequestModel requestModel;
+  final ReturnDetails requestModel;
   GetReturnProductDetailsState(this.requestModel);
 }

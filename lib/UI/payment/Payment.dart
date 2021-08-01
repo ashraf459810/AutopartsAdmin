@@ -99,21 +99,37 @@ class _PaymentState extends State<Payment> {
                                             Text(orders[index].fullName),
                                             Row(
                                               children: [
-                                                Text(orders[index].vendorId.toString(),
+                                                Text(
+                                                    orders[index]
+                                                        .vendorId
+                                                        .toString(),
                                                     style:
                                                         TextStyle(fontSize: 9)),
                                               ],
                                             ),
-                                            Text(orders[index].amount.toString()),
-                                            Text(orders[index].orderId.toString())
+                                            Text(orders[index]
+                                                .amount
+                                                .toString()),
+                                            Text(orders[index]
+                                                .orderId
+                                                .toString())
                                           ],
                                         ),
                                       );
                                     },
                                   ),
                                 )
-                              : Container(height: size.height *0.2,
-                                child: Center(child: Text("No orders have to be baid ",style: TextStyle(color: Colors.orange[900],fontSize: 16),),),));
+                              : Container(
+                                  height: size.height * 0.2,
+                                  child: Center(
+                                    child: Text(
+                                      "No orders have to be paid ",
+                                      style: TextStyle(
+                                          color: Colors.orange[900],
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                                ));
                     },
                   ),
                 )

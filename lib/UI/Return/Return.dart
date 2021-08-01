@@ -119,7 +119,7 @@ class _ReturnState extends State<Return> {
                   height: size.height * 0.01,
                 ),
                 Container(
-                  color: Colors.grey[200],
+                  color: Colors.grey[100],
                   child: TextFormField(
                     decoration: InputDecoration(
                         hintText: " Search by name", border: InputBorder.none),
@@ -132,7 +132,7 @@ class _ReturnState extends State<Return> {
                   height: size.height * 0.01,
                 ),
                 Container(
-                  color: Colors.grey[200],
+                  color: Colors.grey[100],
                   child: TextFormField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -147,11 +147,18 @@ class _ReturnState extends State<Return> {
                   height: size.height * 0.01,
                 ),
                 Container(
+                  height: size.height * 0.07,
                   width: size.width,
-                  color: Colors.grey[200],
+                  color: Colors.grey[100],
                   child: DropdownButton<String>(
-                    hint: Text(
-                      "  select status",
+                    hint: Padding(
+                      padding: const EdgeInsets.only(left: 3),
+                      child: Text(
+                        chosenstatus != null
+                            ? chosenstatus
+                            : "   Select status",
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ),
                     items: <String>[
                       'TAKE_INFO_FROM_CUSTOMER',
@@ -168,13 +175,14 @@ class _ReturnState extends State<Return> {
                         value: value,
                         child: new Text(
                           value,
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(fontSize: 10),
                         ),
                       );
                     }).toList(),
                     onChanged: (value) {
                       print("here");
                       chosenstatus = value;
+                      setState(() {});
                     },
                   ),
                 ),
@@ -202,7 +210,7 @@ class _ReturnState extends State<Return> {
                       child: Center(
                           child: Text(
                         "Search",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       )),
                     ),
                   ),
@@ -281,7 +289,7 @@ class _ReturnState extends State<Return> {
                                     vertical: 10, horizontal: 10),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
                                         "${returnrequests[index].creationDate.day}/${returnrequests[index].creationDate.month}/${returnrequests[index].creationDate.year}"
@@ -301,7 +309,7 @@ class _ReturnState extends State<Return> {
                                       ),
                                     ),
                                     Text(
-                                        "    ${returnrequests[index].id.toString()}"),
+                                        "${returnrequests[index].id.toString()}"),
                                     Flexible(
                                       child: Container(
                                         width: size.width * 0.15,
@@ -309,7 +317,7 @@ class _ReturnState extends State<Return> {
                                           returnrequests[index].status,
                                           style: TextStyle(
                                               color: Colors.blue,
-                                              fontSize: 6,
+                                              fontSize: 8,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),

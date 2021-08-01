@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:admin/Data/Repository/IRepository.dart';
+import 'package:admin/models/Addnote.dart';
 import 'package:admin/models/GetAllReturn.dart';
 
 import 'package:admin/models/ReturnProcessModel.dart';
 import 'package:admin/models/ReturnRequestModel.dart';
+import 'package:admin/models/ReturnTodoDetails.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:admin/injection.dart';
@@ -14,6 +17,7 @@ part 'return_state.dart';
 class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
   ReturnBloc() : super(ReturnInitial());
   var repo = sl.get<IRepository>();
+  ReturnDetails returnDetails;
 
   ReturnRequestModel requestModel;
   ReturnProcessModel returnProcessModel;
@@ -28,7 +32,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         var response = await repo.iHttpHlper.getrequest(
             "http://176.31.225.174:8080/autoparts/order/getreturnproducttodos?status=${event.status}&name=${event.name}&phone=${event.number}&fromDate=${event.date1}&toDate=${event.date2}&page=${event.page}&size=${event.ssize}");
         GetAllReturn getAllReturn = getAllReturnFromJson(response);
-        print(getAllReturn.content.length);
+        print(getAllReturn);
         if (getAllReturn.content.isNotEmpty) {
           for (var i = 0; i < getAllReturn.content.length; i++) {
             requests.add(getAllReturn.content[i]);
@@ -120,11 +124,14 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
     }
     if (event is AddNotForTodoEvent) {
       yield Loading();
+
       try {
+        var token = await repo.iprefsHelper.gettoken();
         var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/addreturnproductnote?admin=${event.admin}&todo=${event.todoid}&note=${event.note}");
-        returnProcessModel = vendorAcceptDiscountFromJson(response);
-        yield AddNotForTodoState(returnProcessModel);
+            "http://176.31.225.174:8080/autoparts/order/addreturnproductnote?admin=$token&todo=${event.todoid}&note=${event.note}");
+        AddNote addNote = addNoteFromJson(response);
+
+        yield AddNotForTodoState(addNote);
       } catch (error) {
         yield Error(error.toString());
       }
@@ -134,8 +141,9 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       try {
         var response = await repo.iHttpHlper.postrequest(
             "http://176.31.225.174:8080/autoparts/order/getreturnproductdetails?todo=${event.todoid}");
-        requestModel = returnRequestModelFromJson(response);
-        yield GetReturnProductDetailsState(requestModel);
+        returnDetails = returnDetailsFromJson(response);
+        log("${returnDetails.notes}");
+        yield GetReturnProductDetailsState(returnDetails);
       } catch (error) {
         yield Error(error.toString());
       }

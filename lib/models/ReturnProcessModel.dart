@@ -42,7 +42,7 @@ class ReturnProcessModel {
   String status;
   String reason;
   bool vendorGaveDiscount;
-  int discount;
+  double discount;
   dynamic customerAcceptedDiscount;
   dynamic productIsReturned;
   dynamic doneDate;

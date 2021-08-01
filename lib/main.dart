@@ -1,10 +1,11 @@
+import 'package:admin/UI/Login/Login.dart';
 import 'package:admin/injection.dart';
 import 'package:flutter/material.dart';
 
 import 'UI/HomePage.dart';
 
 Future<void> main() async {
-    await iniGetIt();
+  await iniGetIt();
   runApp(MyApp());
 }
 
@@ -13,12 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
       theme: ThemeData(
-      
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: SignInTab(),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:admin/UI/Return/bloc/return_bloc.dart';
-import 'package:admin/models/ReturnProcessModel.dart';
 
+import 'package:admin/models/ReturnProcessModel.dart';
+import 'package:admin/models/ReturnTodoDetails.dart' as n;
 import 'package:admin/models/ReturnRequestModel.dart';
 
 import 'package:flutter/material.dart';
@@ -27,8 +28,8 @@ class _RequestInfoState extends State<RequestInfo> {
   bool isyes = false;
   String status;
   String transcost;
-
-  List<dynamic> notes = [];
+  n.ReturnDetails returnDetails;
+  List<n.Note> notes = [];
   ReturnRequestModel returnRequestModel;
   ReturnProcessModel returnProcessModel;
   bool vendordiscount = false;
@@ -52,13 +53,23 @@ class _RequestInfoState extends State<RequestInfo> {
                   return Center(child: CircularProgressIndicator());
                 }
                 if (state is Loading) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LinearProgressIndicator());
                 }
                 if (state is Error) {
                   return Container(
                       height: size.height,
                       child: Center(child: Text(state.error)));
                 }
+                if (state is AddNotForTodoState) {
+                  Fluttertoast.showToast(
+                      msg: "Note Added successfully",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+
                 if (state is AllReturnState) {
                   isyes = false;
                   iscustomeracceptdiscount = false;
@@ -83,7 +94,7 @@ class _RequestInfoState extends State<RequestInfo> {
                 }
                 if (state is GetReturnProductDetailsState) {
                   print("here the details state ");
-                  returnRequestModel = state.requestModel;
+                  returnDetails = state.requestModel;
                   notes = state.requestModel.notes;
                   status = state.requestModel.status;
 
@@ -122,42 +133,41 @@ class _RequestInfoState extends State<RequestInfo> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                "Vendor name   : ${returnRequestModel.vendor.fullName}"),
+                                "Vendor name   : ${returnDetails.vendor.fullName}"),
                             SizedBox(
                               height: size.height * 0.01,
                             ),
                             Text(
-                                "Vendor mobile : ${returnRequestModel.vendor.mobileNumber}"),
+                                "Vendor mobile : ${returnDetails.vendor.mobileNumber}"),
                             SizedBox(
                               height: size.height * 0.01,
                             ),
                             Text(
-                                "Customer name   : ${returnRequestModel.customer.fullName}"),
+                                "Customer name   : ${returnDetails.customer.fullName}"),
                             SizedBox(
                               height: size.height * 0.01,
                             ),
                             Text(
-                                "Customer mobile : ${returnRequestModel.customer.mobileNumber}"),
+                                "Customer mobile : ${returnDetails.customer.mobileNumber}"),
                             SizedBox(
                               height: size.height * 0.01,
                             ),
                             Text(
-                                "Product Name : ${returnRequestModel.item.product.name}"),
+                                "Product Name : ${returnDetails.item.product.name}"),
+                            SizedBox(
+                              height: size.height * 0.01,
+                            ),
+                            Text("Request Status : ${returnDetails.status}"),
                             SizedBox(
                               height: size.height * 0.01,
                             ),
                             Text(
-                                "Request Status : ${returnRequestModel.status}"),
+                                "Reason              : ${returnDetails.reason}"),
                             SizedBox(
                               height: size.height * 0.01,
                             ),
                             Text(
-                                "Reason              : ${returnRequestModel.reason}"),
-                            SizedBox(
-                              height: size.height * 0.01,
-                            ),
-                            Text(
-                                "Date                   : ${returnRequestModel.creationDate.toString().substring(0, 16)}"),
+                                "Date                   : ${returnDetails.creationDate.toString().substring(0, 16)}"),
                           ],
                         ),
                       ),
@@ -184,6 +194,8 @@ class _RequestInfoState extends State<RequestInfo> {
                                         color: Colors.grey[200]),
                                     child: TextFormField(
                                       decoration: InputDecoration(
+                                          contentPadding:
+                                              EdgeInsets.only(left: 10),
                                           hintText: "   Add your note here",
                                           border: InputBorder.none),
                                       keyboardType: TextInputType.text,
@@ -194,11 +206,15 @@ class _RequestInfoState extends State<RequestInfo> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      // context.read<ReturnBloc>().add(AddNotForTodoEvent(, note, widget.todoid))
+                                      context.read<ReturnBloc>().add(
+                                          AddNotForTodoEvent(
+                                              note, widget.todoid));
                                     },
-                                    child: Icon(
-                                      Icons.send_outlined,
-                                      color: Colors.orange,
+                                    child: Container(
+                                      child: Icon(
+                                        Icons.send_outlined,
+                                        color: Colors.orange[600],
+                                      ),
                                     ),
                                   )
                                 ],
@@ -444,7 +460,7 @@ class _RequestInfoState extends State<RequestInfo> {
                                 height: size.height * 0.05,
                                 width: size.width * 0.8,
                                 decoration: BoxDecoration(
-                                    color: Colors.grey[200],
+                                    color: Colors.orange[600],
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(0))),
                                 child: Row(
@@ -453,8 +469,10 @@ class _RequestInfoState extends State<RequestInfo> {
                                     status != null
                                         ? Flexible(
                                             child: Text(
-                                            "OK",
-                                            style: TextStyle(fontSize: 25),
+                                            "Next Step",
+                                            style: TextStyle(
+                                                fontSize: 25,
+                                                color: Colors.white),
                                           ))
                                         : Container()
                                   ],
@@ -467,36 +485,44 @@ class _RequestInfoState extends State<RequestInfo> {
                       ),
                       Container(
                         width: size.width,
-                        height: size.height * 0.05,
+                        height: size.height * 0.054,
                         color: Colors.grey[300],
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text("Admin"),
-                              Text("Note"),
-                            ],
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Admin",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              "Note",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: size.height * 0.01,
-                      ),
-                      Container(
-                        height: size.height * 0.2,
-                        child: ListView.builder(
-                          itemCount: notes.length,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                // Text(notes[index].admin.fullName),
-                                // Text(notes[index].note),
-                              ],
-                            );
-                          },
-                        ),
-                      )
+                      notes.isNotEmpty
+                          ? Container(
+                              height: size.height * 0.3,
+                              child: ListView.builder(
+                                itemCount: notes.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(notes[index].admin.fullName),
+                                        Text(notes[index].note),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                          : Container()
                     ]);
               },
             ),

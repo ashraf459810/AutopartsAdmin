@@ -66,10 +66,9 @@ class InformTransportCompanyEvent extends ReturnEvent {
 }
 
 class AddNotForTodoEvent extends ReturnEvent {
-  final String admin;
   final String note;
   final int todoid;
-  AddNotForTodoEvent(this.admin, this.note, this.todoid);
+  AddNotForTodoEvent(this.note, this.todoid);
 }
 
 class GetReturnProductDetailsEvent extends ReturnEvent {
