@@ -129,9 +129,9 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         var token = await repo.iprefsHelper.gettoken();
         var response = await repo.iHttpHlper.postrequest(
             "http://176.31.225.174:8080/autoparts/order/addreturnproductnote?admin=$token&todo=${event.todoid}&note=${event.note}");
-        AddNote addNote = addNoteFromJson(response);
+        requestModel = returnRequestModelFromJson(response);
 
-        yield AddNotForTodoState(addNote);
+        yield AddNotForTodoState(requestModel);
       } catch (error) {
         yield Error(error.toString());
       }
@@ -144,6 +144,19 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         returnDetails = returnDetailsFromJson(response);
         log("${returnDetails.notes}");
         yield GetReturnProductDetailsState(returnDetails);
+      } catch (error) {
+        yield Error(error.toString());
+      }
+    }
+
+    if (event is CollectEvent) {
+      yield Loading();
+      try {
+        var response = await repo.iHttpHlper.getrequest(
+            "http://176.31.225.174:8080/autoparts/order/collectpaymentorder?paymentTodo=${event.todoid}");
+        requestModel = returnRequestModelFromJson(response);
+
+        yield AllReturnState(requestModel);
       } catch (error) {
         yield Error(error.toString());
       }

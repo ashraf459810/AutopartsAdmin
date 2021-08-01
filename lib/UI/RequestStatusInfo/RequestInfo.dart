@@ -18,6 +18,7 @@ class RequestInfo extends StatefulWidget {
 }
 
 class _RequestInfoState extends State<RequestInfo> {
+  var payment;
   bool isreturnproduct = false;
   String nextaction;
   bool yesno = false;
@@ -29,7 +30,7 @@ class _RequestInfoState extends State<RequestInfo> {
   String status;
   String transcost;
   n.ReturnDetails returnDetails;
-  List<n.Note> notes = [];
+  var notes = [];
   ReturnRequestModel returnRequestModel;
   ReturnProcessModel returnProcessModel;
   bool vendordiscount = false;
@@ -68,6 +69,7 @@ class _RequestInfoState extends State<RequestInfo> {
                       backgroundColor: Colors.red,
                       textColor: Colors.white,
                       fontSize: 16.0);
+                  notes = state.addNote.notes;
                 }
 
                 if (state is AllReturnState) {
@@ -77,6 +79,7 @@ class _RequestInfoState extends State<RequestInfo> {
                   isproductreturned = false;
                   returnRequestModel = state.returnRequestModel;
                   status = state.returnRequestModel.status;
+                  payment = state.returnRequestModel.paymentTodos;
                   print(
                       "${state.returnRequestModel.status} here the status from the state");
                   if (state.returnRequestModel.status ==
@@ -97,6 +100,7 @@ class _RequestInfoState extends State<RequestInfo> {
                   returnDetails = state.requestModel;
                   notes = state.requestModel.notes;
                   status = state.requestModel.status;
+                  payment = state.requestModel.paymentTodos;
 
                   if (state.requestModel.status ==
                       "ASK_CUSTOMER_FOR_DISCOUNT") {
@@ -157,7 +161,11 @@ class _RequestInfoState extends State<RequestInfo> {
                             SizedBox(
                               height: size.height * 0.01,
                             ),
-                            Text("Request Status : ${returnDetails.status}"),
+                            Text(
+                              "Status : $status",
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.orange[900]),
+                            ),
                             SizedBox(
                               height: size.height * 0.01,
                             ),
@@ -483,24 +491,27 @@ class _RequestInfoState extends State<RequestInfo> {
                       SizedBox(
                         height: size.height * 0.02,
                       ),
-                      Container(
-                        width: size.width,
-                        height: size.height * 0.054,
-                        color: Colors.grey[300],
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              "Admin",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            Text(
-                              "Note",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ],
-                        ),
-                      ),
+                      notes.isNotEmpty
+                          ? Container(
+                              width: size.width,
+                              height: size.height * 0.054,
+                              color: Colors.grey[300],
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    "Admin",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  Text(
+                                    "Note",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
                       notes.isNotEmpty
                           ? Container(
                               height: size.height * 0.3,
@@ -512,10 +523,114 @@ class _RequestInfoState extends State<RequestInfo> {
                                         const EdgeInsets.symmetric(vertical: 5),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
-                                        Text(notes[index].admin.fullName),
-                                        Text(notes[index].note),
+                                        Text(
+                                          "               ${notes[index].admin.fullName}",
+                                          style: TextStyle(
+                                              color: Colors.orange[900]),
+                                        ),
+                                        Flexible(
+                                            child: Container(
+                                                width: size.width * 0.3,
+                                                child:
+                                                    Text(notes[index].note))),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(height: size.height * 0.01),
+                      payment.isNotEmpty
+                          ? Container(
+                              width: size.width,
+                              height: size.height * 0.054,
+                              color: Colors.grey[300],
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    "From",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Text(
+                                    "To",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Text(
+                                    "Status",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Text(
+                                    "Amount",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  // Text(
+                                  //   "InvoiceNumber",
+                                  //   style: TextStyle(fontSize: 16),
+                                  // ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      payment.isNotEmpty
+                          ? Container(
+                              height: size.height * 0.3,
+                              child: ListView.builder(
+                                itemCount: payment.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 20),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "${payment[index].fromSide}",
+                                          style: TextStyle(
+                                            color: Colors.orange[900],
+                                          ),
+                                        ),
+                                        Flexible(
+                                            child: Container(
+                                          width: size.width * 0.3,
+                                          child: Text(payment[index].toSide),
+                                        )),
+                                        Flexible(
+                                            child: Container(
+                                          child: Text(payment[index].status),
+                                        )),
+                                        Flexible(
+                                            child: Container(
+                                          child: Text(
+                                              payment[index].amount.toString()),
+                                        )),
+                                        GestureDetector(
+                                          onTap: () {
+                                            context.read<ReturnBloc>().add(
+                                                CollectEvent(returnDetails
+                                                    .paymentTodos[index].id));
+                                          },
+                                          child: Container(
+                                            color: Colors.blue,
+                                            height: size.height * 0.02,
+                                            width: size.width * 0.1,
+                                            child: Center(
+                                                child: Text(
+                                              "Collect",
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white),
+                                            )),
+                                          ),
+                                        )
                                       ],
                                     ),
                                   );

@@ -75,3 +75,8 @@ class GetReturnProductDetailsEvent extends ReturnEvent {
   final int todoid;
   GetReturnProductDetailsEvent(this.todoid);
 }
+
+class CollectEvent extends ReturnEvent {
+  final int todoid;
+  CollectEvent(this.todoid);
+}

@@ -55,7 +55,7 @@ class ReturnRequestModel {
   dynamic transportCosts;
   dynamic amountToCollect;
   List<dynamic> notes;
-  List<dynamic> paymentTodos;
+  List<PaymentTodo> paymentTodos;
 
   factory ReturnRequestModel.fromJson(Map<String, dynamic> json) =>
       ReturnRequestModel(
@@ -79,7 +79,8 @@ class ReturnRequestModel {
         transportCosts: json["transportCosts"],
         amountToCollect: json["amountToCollect"],
         notes: List<dynamic>.from(json["notes"].map((x) => x)),
-        paymentTodos: List<dynamic>.from(json["paymentTodos"].map((x) => x)),
+        paymentTodos: List<PaymentTodo>.from(
+            json["paymentTodos"].map((x) => PaymentTodo.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -103,7 +104,42 @@ class ReturnRequestModel {
         "transportCosts": transportCosts,
         "amountToCollect": amountToCollect,
         "notes": List<dynamic>.from(notes.map((x) => x)),
-        "paymentTodos": List<dynamic>.from(paymentTodos.map((x) => x)),
+      };
+}
+
+class PaymentTodo {
+  PaymentTodo({
+    this.id,
+    this.fromSide,
+    this.toSide,
+    this.status,
+    this.amount,
+    this.invoiceNumber,
+  });
+
+  int id;
+  String fromSide;
+  String toSide;
+  String status;
+  double amount;
+  String invoiceNumber;
+
+  factory PaymentTodo.fromJson(Map<String, dynamic> json) => PaymentTodo(
+        id: json["id"],
+        fromSide: json["fromSide"],
+        toSide: json["toSide"],
+        status: json["status"],
+        amount: json["amount"].toDouble(),
+        invoiceNumber: json["invoiceNumber"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "fromSide": fromSide,
+        "toSide": toSide,
+        "status": status,
+        "amount": amount,
+        "invoiceNumber": invoiceNumber,
       };
 }
 
