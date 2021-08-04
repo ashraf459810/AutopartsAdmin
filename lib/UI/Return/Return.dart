@@ -35,7 +35,7 @@ class _ReturnState extends State<Return> {
     var size = MediaQuery.of(context).size;
     return BlocProvider(
       create: (context) => ReturnBloc()
-        ..add(GetReturnProductsEvent("", "", "", 0, pages, "", ssize)),
+        ..add(GetReturnProductsEvent("", "", "", 0, pages, "", ssize, false)),
       child: Column(
         children: [
           Container(
@@ -165,7 +165,7 @@ class _ReturnState extends State<Return> {
                       ' TAKE_INFO_FROM_VENDOR_AND_ASK_FOR_DISCOUNT',
                       'ASK_CUSTOMER_FOR_DISCOUNT',
                       ' GET_PRODUCT_FROM_CUSTOMER',
-                      'RCHECK_PRODUCT',
+                      'CHECK_PRODUCT',
                       'RETURN_PRODUCT_TO_VENDOR',
                       'RETURN_PRODUCT_TO_CUSTOMER',
                       'HANDLE_PAYMENTS',
@@ -192,14 +192,14 @@ class _ReturnState extends State<Return> {
                     onTap: () {
                       print(chosenstatus);
                       context.read<ReturnBloc>().add(GetReturnProductsEvent(
-                            "${dateTime1.year}-${dateTime1.month}-${dateTime1.day}",
-                            "${dateTime2.year}-${dateTime2.month}-${dateTime2.day}",
-                            name != null ? name : "",
-                            number != null ? number : 0,
-                            pages,
-                            chosenstatus != null ? chosenstatus : "",
-                            ssize,
-                          ));
+                          "${dateTime1.year}-${dateTime1.month}-${dateTime1.day}",
+                          "${dateTime2.year}-${dateTime2.month}-${dateTime2.day}",
+                          name != null ? name : "",
+                          number != null ? number : 0,
+                          pages,
+                          chosenstatus != null ? chosenstatus : "",
+                          ssize,
+                          true));
                     },
                     child: Container(
                       height: size.height * 0.06,
@@ -249,7 +249,9 @@ class _ReturnState extends State<Return> {
                 return Center(child: Text(state.error));
               }
               if (state is GetReturnProductsState) {
+                print("here after search");
                 returnrequests = state.requests;
+                print(returnrequests.length);
               }
               return NotificationListener<ScrollNotification>(
                   onNotification: (notification) {
@@ -260,7 +262,7 @@ class _ReturnState extends State<Return> {
                       print(pages);
 
                       context.read<ReturnBloc>().add(GetReturnProductsEvent(
-                          '', '', '', 0, pages, "", ssize));
+                          '', '', '', 0, pages, "", ssize, false));
                     }
 
                     return false;

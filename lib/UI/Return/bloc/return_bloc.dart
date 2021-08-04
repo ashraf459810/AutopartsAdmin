@@ -32,13 +32,16 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         var response = await repo.iHttpHlper.getrequest(
             "http://176.31.225.174:8080/autoparts/order/getreturnproducttodos?status=${event.status}&name=${event.name}&phone=${event.number}&fromDate=${event.date1}&toDate=${event.date2}&page=${event.page}&size=${event.ssize}");
         GetAllReturn getAllReturn = getAllReturnFromJson(response);
-        print(getAllReturn);
-        if (getAllReturn.content.isNotEmpty) {
-          for (var i = 0; i < getAllReturn.content.length; i++) {
-            requests.add(getAllReturn.content[i]);
+        if (event.issearch == false) {
+          if (getAllReturn.content.isNotEmpty) {
+            for (var i = 0; i < getAllReturn.content.length; i++) {
+              requests.add(getAllReturn.content[i]);
+            }
           }
+          yield GetReturnProductsState(getAllReturn, requests);
+        } else {
+          yield GetReturnProductsState(getAllReturn, getAllReturn.content);
         }
-        yield GetReturnProductsState(getAllReturn, requests);
       } catch (error) {
         yield Error(error.toString());
       }

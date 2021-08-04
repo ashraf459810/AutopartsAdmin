@@ -11,6 +11,7 @@ class GetReturnProductsEvent extends ReturnEvent {
   final String name;
   final int page;
   final int ssize;
+  final bool issearch;
   GetReturnProductsEvent(
       [this.date1,
       this.date2,
@@ -18,7 +19,8 @@ class GetReturnProductsEvent extends ReturnEvent {
       this.number,
       this.page,
       this.status,
-      this.ssize]);
+      this.ssize,
+      this.issearch]);
 }
 
 class TalkeToVendorEvent extends ReturnEvent {
