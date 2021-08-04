@@ -22,9 +22,8 @@ class SigninBloc extends Bloc<SigninEvent, SigninState> {
       try {
         String response = await repo.iHttpHlper.postrequest(
             "http://176.31.225.174:8080/autoparts/admin/login?mobileNumber=${event.mobile}");
-        if (response.contains("successfully")) {
-          yield SignInState(response);
-        }
+
+        yield SignInState(response);
       } catch (error) {
         yield Error(error.toString());
       }
@@ -37,7 +36,7 @@ class SigninBloc extends Bloc<SigninEvent, SigninState> {
             "http://176.31.225.174:8080/autoparts/admin/checkotp?mobileNumber=${event.mobile}&code=${event.code}");
         OtpResponse otpResponse = otpResponseFromJson(response);
         await repo.iprefsHelper.savetoken(otpResponse.id.toString());
-
+        await repo.iprefsHelper.setisverify(true);
         yield CheckCodeState(otpResponse);
       } catch (error) {
         yield Error(error.toString());

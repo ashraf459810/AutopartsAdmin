@@ -51,32 +51,33 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       fit: BoxFit.fill)),
               child: Column(children: [
                 SizedBox(
-                  height: 21,
+                  height: 50,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12, right: 12),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 12, right: 12),
+                //   child: Row(
+                //     children: [
+                //       Padding(
+                //         padding: const EdgeInsets.all(8.0),
+                //         child: Container(
+                //           decoration: BoxDecoration(
+                //             color: Colors.orange,
+                //             borderRadius: BorderRadius.circular(50),
+                //           ),
+                //           child: Padding(
+                //             padding: const EdgeInsets.all(8.0),
+                //             child: Icon(
+                //               Icons.arrow_back_ios,
+                //               color: Colors.white,
+                //               size: 16,
+                //             ),
+                //           ),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
+
                 Stack(
                   children: [
                     Image.asset(

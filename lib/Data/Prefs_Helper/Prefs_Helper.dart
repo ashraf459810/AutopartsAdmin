@@ -5,4 +5,6 @@ abstract class PrefsHelper {
 
   Future<void> savetoken(String token);
   Future<String> gettoken();
+  Future<void> setisverify(bool s);
+  Future<bool> getisverify();
 }

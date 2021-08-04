@@ -62,7 +62,7 @@ class InformTransportCompanyState extends ReturnState {
 }
 
 class AddNotForTodoState extends ReturnState {
-  final ReturnRequestModel addNote;
+  final AddNote addNote;
   AddNotForTodoState(this.addNote);
 }
 

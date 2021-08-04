@@ -2,7 +2,7 @@ import 'package:admin/UI/Login/Login.dart';
 import 'package:admin/injection.dart';
 import 'package:flutter/material.dart';
 
-import 'UI/HomePage.dart';
+import 'UI/App/App.dart';
 
 Future<void> main() async {
   await iniGetIt();
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SignInTab(),
+      home: App(),
     );
   }
 }

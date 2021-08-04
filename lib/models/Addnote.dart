@@ -42,18 +42,18 @@ class AddNote {
   List<dynamic> attachments;
   String status;
   String reason;
-  dynamic vendorGaveDiscount;
-  dynamic discount;
-  dynamic customerAcceptedDiscount;
-  dynamic productIsReturned;
-  dynamic doneDate;
+  bool vendorGaveDiscount;
+  double discount;
+  bool customerAcceptedDiscount;
+  bool productIsReturned;
+  DateTime doneDate;
   Customer customer;
   Customer vendor;
   Item item;
-  dynamic transportCosts;
+  double transportCosts;
   dynamic amountToCollect;
   List<Note> notes;
-  List<dynamic> paymentTodos;
+  List<PaymentTodo> paymentTodos;
 
   factory AddNote.fromJson(Map<String, dynamic> json) => AddNote(
         id: json["id"],
@@ -69,14 +69,14 @@ class AddNote {
         discount: json["discount"],
         customerAcceptedDiscount: json["customerAcceptedDiscount"],
         productIsReturned: json["productIsReturned"],
-        doneDate: json["doneDate"],
         customer: Customer.fromJson(json["customer"]),
         vendor: Customer.fromJson(json["vendor"]),
         item: Item.fromJson(json["item"]),
         transportCosts: json["transportCosts"],
         amountToCollect: json["amountToCollect"],
         notes: List<Note>.from(json["notes"].map((x) => Note.fromJson(x))),
-        paymentTodos: List<dynamic>.from(json["paymentTodos"].map((x) => x)),
+        paymentTodos: List<PaymentTodo>.from(
+            json["paymentTodos"].map((x) => PaymentTodo.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -93,14 +93,14 @@ class AddNote {
         "discount": discount,
         "customerAcceptedDiscount": customerAcceptedDiscount,
         "productIsReturned": productIsReturned,
-        "doneDate": doneDate,
+        "doneDate": doneDate.toIso8601String(),
         "customer": customer.toJson(),
         "vendor": vendor.toJson(),
         "item": item.toJson(),
         "transportCosts": transportCosts,
         "amountToCollect": amountToCollect,
         "notes": List<dynamic>.from(notes.map((x) => x.toJson())),
-        "paymentTodos": List<dynamic>.from(paymentTodos.map((x) => x)),
+        "paymentTodos": List<dynamic>.from(paymentTodos.map((x) => x.toJson())),
       };
 }
 
@@ -112,21 +112,29 @@ class Customer {
   });
 
   int id;
-  String fullName;
+  FullName fullName;
   String mobileNumber;
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         id: json["id"],
-        fullName: json["fullName"],
+        fullName: fullNameValues.map[json["fullName"]],
         mobileNumber: json["mobileNumber"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "fullName": fullName,
+        "fullName": fullNameValues.reverse[fullName],
         "mobileNumber": mobileNumber,
       };
 }
+
+enum FullName { ASHRAAS, ASDAASD, VENDOR }
+
+final fullNameValues = EnumValues({
+  "asdaasd": FullName.ASDAASD,
+  "ashraas": FullName.ASHRAAS,
+  "vendor": FullName.VENDOR
+});
 
 class Item {
   Item({
@@ -200,12 +208,12 @@ class Note {
   });
 
   int id;
-  Admin admin;
+  Customer admin;
   String note;
 
   factory Note.fromJson(Map<String, dynamic> json) => Note(
         id: json["id"],
-        admin: Admin.fromJson(json["admin"]),
+        admin: Customer.fromJson(json["admin"]),
         note: json["note"],
       );
 
@@ -216,59 +224,52 @@ class Note {
       };
 }
 
-class Admin {
-  Admin({
+class PaymentTodo {
+  PaymentTodo({
     this.id,
-    this.version,
-    this.creationDate,
-    this.lastModificationDate,
-    this.uuid,
-    this.objectType,
-    this.attachments,
-    this.role,
-    this.mobileNumber,
-    this.fullName,
-    this.email,
-    this.roles,
+    this.fromSide,
+    this.toSide,
+    this.status,
+    this.amount,
+    this.invoiceNumber,
   });
 
   int id;
-  int version;
-  DateTime creationDate;
-  DateTime lastModificationDate;
-  String uuid;
-  String objectType;
-  List<dynamic> attachments;
-  String role;
-  dynamic mobileNumber;
-  dynamic fullName;
-  dynamic email;
-  List<dynamic> roles;
+  String fromSide;
+  String toSide;
+  String status;
+  double amount;
+  String invoiceNumber;
 
-  factory Admin.fromJson(Map<String, dynamic> json) => Admin(
+  factory PaymentTodo.fromJson(Map<String, dynamic> json) => PaymentTodo(
         id: json["id"],
-        version: json["version"],
-        uuid: json["uuid"],
-        objectType: json["objectType"],
-        role: json["role"],
-        mobileNumber: json["mobileNumber"],
-        fullName: json["fullName"],
-        email: json["email"],
-        // roles: List<dynamic>.from(json["roles"].map((x) => x)),
+        fromSide: json["fromSide"],
+        toSide: json["toSide"],
+        status: json["status"],
+        amount: json["amount"],
+        invoiceNumber: json["invoiceNumber"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "version": version,
-        "creationDate": creationDate.toIso8601String(),
-        "lastModificationDate": lastModificationDate.toIso8601String(),
-        "uuid": uuid,
-        "objectType": objectType,
-        "attachments": List<dynamic>.from(attachments.map((x) => x)),
-        "role": role,
-        "mobileNumber": mobileNumber,
-        "fullName": fullName,
-        "email": email,
-        "roles": List<dynamic>.from(roles.map((x) => x)),
+        "fromSide": fromSide,
+        "toSide": toSide,
+        "status": status,
+        "amount": amount,
+        "invoiceNumber": invoiceNumber,
       };
+}
+
+class EnumValues<T> {
+  Map<String, T> map;
+  Map<T, String> reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    if (reverseMap == null) {
+      reverseMap = map.map((k, v) => new MapEntry(v, k));
+    }
+    return reverseMap;
+  }
 }

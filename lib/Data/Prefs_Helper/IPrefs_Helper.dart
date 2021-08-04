@@ -20,4 +20,16 @@ class IprefsHelper implements PrefsHelper {
       S.token,
     );
   }
+
+  @override
+  Future<bool> getisverify() async {
+    return (await getPrefs()).getBool(
+      S.islogin,
+    );
+  }
+
+  @override
+  Future<void> setisverify(bool s) async {
+    return (await getPrefs()).setBool(S.islogin, s);
+  }
 }

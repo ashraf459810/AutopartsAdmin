@@ -13,7 +13,7 @@ class SignInTab extends StatefulWidget {
 
 class _SignInTabState extends State<SignInTab> {
   bool selected = false;
-  String country = "select country";
+
   String mobileNumber;
 
   final formKey = GlobalKey<FormState>();
@@ -76,36 +76,6 @@ class _SignInTabState extends State<SignInTab> {
                                 children: [
                                   SizedBox(
                                     width: size.width * 0.04,
-                                  ),
-                                  GestureDetector(
-                                    child: Container(
-                                      child: Center(
-                                          child: Text(
-                                        country,
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.orange[900]),
-                                      )),
-                                    ),
-                                    onTap: () {
-                                      showCountryPicker(
-                                          showPhoneCode: true,
-                                          countryFilter: <String>[
-                                            'AE',
-                                            'SA',
-                                            'OM',
-                                            'QA'
-                                          ],
-                                          context: context,
-                                          onSelect: (Country value) {
-                                            setState(() {
-                                              country = value.phoneCode;
-
-                                              FocusScope.of(context)
-                                                  .requestFocus(f1);
-                                            });
-                                          });
-                                    },
                                   ),
                                   SizedBox(
                                     width: size.width * 0.1,
@@ -189,7 +159,7 @@ class _SignInTabState extends State<SignInTab> {
                             Navigator.of(context)
                                 .pushReplacement(MaterialPageRoute(
                               builder: (context) => VerifyEmailScreen(
-                                mobile: country + mobileNumber,
+                                mobile: "971" + mobileNumber,
                               ),
                             ));
                           }
@@ -220,13 +190,8 @@ class _SignInTabState extends State<SignInTab> {
       builder: (context) {
         return InkWell(
           onTap: () {
-            if (country != "select country") {
-              print("vendor = true");
-              if (formKey.currentState.validate() && mobileNumber != null) {
-                context
-                    .read<SigninBloc>()
-                    .add(SignInEvent(country + mobileNumber));
-              }
+            if (formKey.currentState.validate() && mobileNumber != null) {
+              context.read<SigninBloc>().add(SignInEvent("971" + mobileNumber));
             } else {
               Fluttertoast.showToast(
                   msg: "please fill all the fields",

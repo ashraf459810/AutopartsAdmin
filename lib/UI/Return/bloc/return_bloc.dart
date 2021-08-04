@@ -129,9 +129,9 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         var token = await repo.iprefsHelper.gettoken();
         var response = await repo.iHttpHlper.postrequest(
             "http://176.31.225.174:8080/autoparts/order/addreturnproductnote?admin=$token&todo=${event.todoid}&note=${event.note}");
-        requestModel = returnRequestModelFromJson(response);
+        AddNote addNote = addNoteFromJson(response);
 
-        yield AddNotForTodoState(requestModel);
+        yield AddNotForTodoState(addNote);
       } catch (error) {
         yield Error(error.toString());
       }

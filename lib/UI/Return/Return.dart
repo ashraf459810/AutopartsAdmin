@@ -279,9 +279,13 @@ class _ReturnState extends State<Return> {
                             itemBuilder: (context, index) => InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => RequestInfo(
-                                    todoid: returnrequests[index].id,
-                                  ),
+                                  builder: (_) => RequestInfo(
+                                      todoid: returnrequests[index].id,
+                                      f: () {
+                                        context.read<ReturnBloc>().add(
+                                            GetReturnProductsEvent(
+                                                "", "", "", 0, 0, "", 10));
+                                      }),
                                 ));
                               },
                               child: Padding(

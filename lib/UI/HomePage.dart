@@ -13,7 +13,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static List<Widget> _pages = <Widget>[Users(), Payment(), Return()];
+  static List<Widget> _pages = <Widget>[
+    // Users(),
+    Payment(), Return()
+  ];
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -22,20 +25,20 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
         currentIndex: _selectedIndex,
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'lib/assets/address-card.svg',
-              color: Colors.grey,
-            ),
-            title: Text(
-              'Users',
-              style: TextStyle(color: Colors.grey, fontSize: 12),
-            ),
-            activeIcon: SvgPicture.asset(
-              'lib/assets/address-card.svg',
-              color: Colors.orange,
-            ),
-          ),
+          // BottomNavigationBarItem(
+          //   icon: SvgPicture.asset(
+          //     'lib/assets/address-card.svg',
+          //     color: Colors.grey,
+          //   ),
+          //   title: Text(
+          //     'Users',
+          //     style: TextStyle(color: Colors.grey, fontSize: 12),
+          //   ),
+          //   activeIcon: SvgPicture.asset(
+          //     'lib/assets/address-card.svg',
+          //     color: Colors.orange,
+          //   ),
+          // ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               'lib/assets/bell.svg',
