@@ -20,7 +20,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       // yield Loading();
       try {
         var result = await repo.iHttpHlper.getrequest(
-            "http://176.31.225.174:8080/autoparts/order/getdueorders?page=${event.page}&size=${event.size}");
+            "/order/getdueorders?page=${event.page}&size=${event.size}");
         dueOrders = dueOrdersFromJson(result);
         yield OrdersHaveToPayState(dueOrders);
       } catch (e) {

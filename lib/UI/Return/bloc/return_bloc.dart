@@ -30,7 +30,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       // yield Loading();
       try {
         var response = await repo.iHttpHlper.getrequest(
-            "http://176.31.225.174:8080/autoparts/order/getreturnproducttodos?status=${event.status}&name=${event.name}&phone=${event.number}&fromDate=${event.date1}&toDate=${event.date2}&page=${event.page}&size=${event.ssize}");
+            "/order/getreturnproducttodos?status=${event.status}&name=${event.name}&phone=${event.number}&fromDate=${event.date1}&toDate=${event.date2}&page=${event.page}&size=${event.ssize}");
         GetAllReturn getAllReturn = getAllReturnFromJson(response);
         if (event.issearch == false) {
           if (getAllReturn.content.isNotEmpty) {
@@ -49,8 +49,8 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
     if (event is TalkeToVendorEvent) {
       yield Loading();
       try {
-        var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/processreturnproduct?todo=${event.todoid}");
+        var response = await repo.iHttpHlper
+            .postrequest("/order/processreturnproduct?todo=${event.todoid}");
 
         requestModel = returnRequestModelFromJson(response);
         yield AllReturnState(requestModel);
@@ -62,7 +62,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       yield Loading();
       try {
         var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/processreturnproduct?todo=${event.todoid}&vendorGaveDiscount=${event.isdiscountaccepted}&discount=${event.discount}");
+            "/order/processreturnproduct?todo=${event.todoid}&vendorGaveDiscount=${event.isdiscountaccepted}&discount=${event.discount}");
         requestModel = returnRequestModelFromJson(response);
         yield AllReturnState(requestModel);
       } catch (error) {
@@ -73,7 +73,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       yield Loading();
       try {
         var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/processreturnproduct?todo=${event.todoid}&vendorGaveDiscount=${event.isdiscountaccepted}");
+            "/order/processreturnproduct?todo=${event.todoid}&vendorGaveDiscount=${event.isdiscountaccepted}");
         requestModel = returnRequestModelFromJson(response);
         yield AllReturnState(requestModel);
       } catch (error) {
@@ -84,7 +84,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       yield Loading();
       try {
         var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/processreturnproduct?todo=${event.todoid}&customerAcceptedDiscount=${event.accepted}");
+            "/order/processreturnproduct?todo=${event.todoid}&customerAcceptedDiscount=${event.accepted}");
         requestModel = returnRequestModelFromJson(response);
         yield AllReturnState(requestModel);
       } catch (error) {
@@ -94,8 +94,8 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
     if (event is AutopartCheckTheProductEvent) {
       yield Loading();
       try {
-        var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/processreturnproduct?todo=${event.todoid}");
+        var response = await repo.iHttpHlper
+            .postrequest("/order/processreturnproduct?todo=${event.todoid}");
         requestModel = returnRequestModelFromJson(response);
         yield AllReturnState(requestModel);
       } catch (error) {
@@ -107,7 +107,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       yield Loading();
       try {
         var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/processreturnproduct?todo=${event.todoid}&productIsReturned=${event.isproductreturned}&transportCosts=${event.transcost}");
+            "/order/processreturnproduct?todo=${event.todoid}&productIsReturned=${event.isproductreturned}&transportCosts=${event.transcost}");
         requestModel = returnRequestModelFromJson(response);
         yield AllReturnState(requestModel);
       } catch (error) {
@@ -117,8 +117,8 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
     if (event is InformTransportCompanyEvent) {
       yield Loading();
       try {
-        var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/processreturnproduct?todo=${event.todoid}");
+        var response = await repo.iHttpHlper
+            .postrequest("/order/processreturnproduct?todo=${event.todoid}");
         requestModel = returnRequestModelFromJson(response);
         yield AllReturnState(requestModel);
       } catch (error) {
@@ -131,7 +131,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       try {
         var token = await repo.iprefsHelper.gettoken();
         var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/addreturnproductnote?admin=$token&todo=${event.todoid}&note=${event.note}");
+            "/order/addreturnproductnote?admin=$token&todo=${event.todoid}&note=${event.note}");
         AddNote addNote = addNoteFromJson(response);
 
         yield AddNotForTodoState(addNote);
@@ -142,8 +142,8 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
     if (event is GetReturnProductDetailsEvent) {
       yield Loading();
       try {
-        var response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/order/getreturnproductdetails?todo=${event.todoid}");
+        var response = await repo.iHttpHlper
+            .postrequest("/order/getreturnproductdetails?todo=${event.todoid}");
         returnDetails = returnDetailsFromJson(response);
         log("${returnDetails.notes}");
         yield GetReturnProductDetailsState(returnDetails);
@@ -156,7 +156,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       yield Loading();
       try {
         var response = await repo.iHttpHlper.getrequest(
-            "http://176.31.225.174:8080/autoparts/order/collectpaymentorder?paymentTodo=${event.todoid}");
+            "/order/collectpaymentorder?paymentTodo=${event.todoid}");
         requestModel = returnRequestModelFromJson(response);
 
         yield AllReturnState(requestModel);

@@ -20,8 +20,8 @@ class SigninBloc extends Bloc<SigninEvent, SigninState> {
     if (event is SignInEvent) {
       yield Loading();
       try {
-        String response = await repo.iHttpHlper.postrequest(
-            "http://176.31.225.174:8080/autoparts/admin/login?mobileNumber=${event.mobile}");
+        String response = await repo.iHttpHlper
+            .postrequest("/admin/login?mobileNumber=${event.mobile}");
 
         yield SignInState(response);
       } catch (error) {
@@ -33,7 +33,7 @@ class SigninBloc extends Bloc<SigninEvent, SigninState> {
       yield Loading();
       try {
         String response = await repo.iHttpHlper.getrequest(
-            "http://176.31.225.174:8080/autoparts/admin/checkotp?mobileNumber=${event.mobile}&code=${event.code}");
+            "/admin/checkotp?mobileNumber=${event.mobile}&code=${event.code}");
         OtpResponse otpResponse = otpResponseFromJson(response);
         await repo.iprefsHelper.savetoken(otpResponse.id.toString());
         await repo.iprefsHelper.setisverify(true);

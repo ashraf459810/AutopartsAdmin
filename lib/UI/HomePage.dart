@@ -1,5 +1,6 @@
 import 'package:admin/UI/Return/Return.dart';
 import 'package:admin/UI/payment/Payment.dart';
+import 'package:admin/UI/Shipment/Shipping.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -13,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static List<Widget> _pages = <Widget>[
     // Users(),
-    Payment(), Return()
+    Payment(), Return(), Shipping()
   ];
   int _selectedIndex = 0;
   @override
@@ -62,6 +63,20 @@ class _HomePageState extends State<HomePage> {
             ),
             activeIcon: SvgPicture.asset(
               'lib/assets/undo.svg',
+              color: Colors.orange,
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'lib/assets/Group 659.svg',
+              color: Colors.grey,
+            ),
+            title: Text(
+              'Shipping',
+              style: TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+            activeIcon: SvgPicture.asset(
+              'lib/assets/Group 659.svg',
               color: Colors.orange,
             ),
           ),

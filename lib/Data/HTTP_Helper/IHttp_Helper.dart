@@ -5,7 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
 
 class IHttpHlper implements HttpHelper {
-  final String _baseUrl = "";
+  final String baseUrl = "http://176.31.225.174:8080/autoparts";
   @override
   Future getrequest(String url) async {
     var responseJson;
@@ -20,7 +20,7 @@ class IHttpHlper implements HttpHelper {
         throw NoInternet("");
     }
 
-    final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(baseUrl + url));
     print(response.statusCode);
     print("here from http $url");
 
@@ -42,7 +42,7 @@ class IHttpHlper implements HttpHelper {
         throw NoInternet("");
     }
 
-    final response = await http.post(Uri.parse(_baseUrl + url));
+    final response = await http.post(Uri.parse(baseUrl + url));
     print(response.statusCode);
     print("here from http $url");
     responseJson = returnResponse(response);
