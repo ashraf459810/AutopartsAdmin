@@ -29,6 +29,11 @@ class DeliverEvent extends ShippingEvent {
   DeliverEvent(this.shipid);
 }
 
+class DoneEvent extends ShippingEvent {
+  final int shipid;
+  DoneEvent(this.shipid);
+}
+
 class GetShipOrderDetails extends ShippingEvent {
   final int orderid;
   GetShipOrderDetails(this.orderid);

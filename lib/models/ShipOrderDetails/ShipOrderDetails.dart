@@ -227,7 +227,7 @@ class ReturnProductTodo {
   VendorClass customer;
   VendorClass vendor;
   Item item;
-  int transportCosts;
+  double transportCosts;
   dynamic amountToCollect;
   List<Note> notes;
   List<PaymentTodo> paymentTodos;

@@ -32,6 +32,11 @@ class DeliverState extends ShippingState {
   DeliverState(this.shipOrderDetails);
 }
 
+class DoneState extends ShippingState {
+  final ShipOrderDetails shipOrderDetails;
+  DoneState(this.shipOrderDetails);
+}
+
 class GetShipOrderDetailsState extends ShippingState {
   final ShipOrderDetails shipOrderDetails;
   GetShipOrderDetailsState(this.shipOrderDetails);
