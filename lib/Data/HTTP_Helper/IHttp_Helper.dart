@@ -67,7 +67,8 @@ class IHttpHlper implements HttpHelper {
       case 404:
         throw NoInternet("Check your connection");
       case 500:
-        throw InternalServerError("Internal Server Error");
+        throw InternalServerError(
+            enternalServerErrorFromJson(response.body).message);
 
       default:
         throw FetchDataException(
