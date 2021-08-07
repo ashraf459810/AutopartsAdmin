@@ -22,6 +22,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
   ReturnRequestModel requestModel;
   ReturnProcessModel returnProcessModel;
   List<Content> requests = [];
+  List<Content> serachrequests = [];
   @override
   Stream<ReturnState> mapEventToState(
     ReturnEvent event,
@@ -40,7 +41,12 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           }
           yield GetReturnProductsState(getAllReturn, requests);
         } else {
-          yield GetReturnProductsState(getAllReturn, getAllReturn.content);
+          if (getAllReturn.content.isNotEmpty) {
+            for (var i = 0; i < getAllReturn.content.length; i++) {
+              serachrequests.add(getAllReturn.content[i]);
+            }
+          }
+          yield GetReturnProductsState(getAllReturn, serachrequests);
         }
       } catch (error) {
         yield Error(error.toString());

@@ -49,11 +49,27 @@ class _RequestInfoState extends State<RequestInfo> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return WillPopScope(
-        onWillPop: onwillpop(),
+        onWillPop: onwillpop,
         child: BlocProvider(
           create: (context) =>
               ReturnBloc()..add(GetReturnProductDetailsEvent(widget.todoid)),
           child: Scaffold(
+            appBar: PreferredSize(
+                preferredSize: Size.fromHeight(30.0), // here the desired height
+                child: AppBar(
+                    leading: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        onwillpop();
+                      },
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.orange[900],
+                      ),
+                    ),
+                    backgroundColor: Colors.white
+                    // ...
+                    )),
             body: SingleChildScrollView(
               child: Container(
                 child: BlocBuilder<ReturnBloc, ReturnState>(
@@ -160,9 +176,6 @@ class _RequestInfoState extends State<RequestInfo> {
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: size.height * 0.1,
-                          ),
                           Container(
                             height: size.height * 0.05,
                             decoration: BoxDecoration(
@@ -762,7 +775,8 @@ class _RequestInfoState extends State<RequestInfo> {
         ));
   }
 
-  onwillpop() {
+  Future<bool> onwillpop() async {
     widget.f();
+    return true;
   }
 }

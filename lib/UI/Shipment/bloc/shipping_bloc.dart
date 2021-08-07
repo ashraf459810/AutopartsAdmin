@@ -15,6 +15,7 @@ class ShippingBloc extends Bloc<ShippingEvent, ShippingState> {
   ShippingBloc() : super(ShippingInitial());
   var repo = sl.get<IRepository>();
   List<Shipments> shiporders = [];
+  List<Shipments> searchorders = [];
   ShipOrderDetails shipOrderDetails;
 
   @override
@@ -24,13 +25,20 @@ class ShippingBloc extends Bloc<ShippingEvent, ShippingState> {
     if (event is GetAllShipEvent) {
       try {
         var response = await repo.iHttpHlper.getrequest(
-            "/order/getorders?customerName=${event.customername}&mobileNumber=${event.mobile}&status${event.status}=&page${event.pages}=&size=${event.size}");
+            "/order/getorders?customerName=${event.customername}&mobileNumber=${event.mobile}&status=${event.status}&page=${event.pages}&size=${event.size}");
         ShipmentModel shipmentModel = shipmentModelFromJson(response);
-        if (shipmentModel.content.isNotEmpty) {
-          for (var i = 0; i < shipmentModel.content.length; i++) {
-            shiporders.add(shipmentModel.content[i]);
+        if (event.issearch == false) {
+          if (shipmentModel.content.isNotEmpty) {
+            for (var i = 0; i < shipmentModel.content.length; i++) {
+              shiporders.add(shipmentModel.content[i]);
+            }
+            yield GetAllShipState(shiporders);
           }
-          yield GetAllShipState(shiporders);
+        } else if (shipmentModel.content.isNotEmpty) {
+          for (var i = 0; i < shipmentModel.content.length; i++) {
+            searchorders.add(shipmentModel.content[i]);
+          }
+          yield GetAllShipState(searchorders);
         }
       } catch (error) {
         yield Error(error.toString());
@@ -71,14 +79,14 @@ class ShippingBloc extends Bloc<ShippingEvent, ShippingState> {
     }
 
     if (event is GetShipOrderDetails) {
-      // try {
-      var response = await repo.iHttpHlper
-          .getrequest("/order/getorderfulldetails?order=${event.orderid}");
-      shipOrderDetails = shipOrderDetailsFromJson(response);
-      yield GetShipOrderDetailsState(shipOrderDetails);
-      // } catch (error) {
-      //   yield Error(error.toString());
-      // }
+      try {
+        var response = await repo.iHttpHlper
+            .getrequest("/order/getorderfulldetails?order=${event.orderid}");
+        shipOrderDetails = shipOrderDetailsFromJson(response);
+        yield GetShipOrderDetailsState(shipOrderDetails);
+      } catch (error) {
+        yield Error(error.toString());
+      }
     }
 
     if (event is DoneEvent) {

@@ -9,9 +9,15 @@ class GetAllShipEvent extends ShippingEvent {
   final String status;
   final int pages;
   final int size;
+  final bool issearch;
 
   GetAllShipEvent(
-      [this.customername, this.mobile, this.status, this.pages, this.size]);
+      [this.customername,
+      this.mobile,
+      this.status,
+      this.pages,
+      this.size,
+      this.issearch]);
 }
 
 class PrepareEvent extends ShippingEvent {

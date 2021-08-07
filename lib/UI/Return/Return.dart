@@ -269,7 +269,8 @@ class _ReturnState extends State<Return> {
                   },
                   child: returnrequests.isNotEmpty
                       ? Container(
-                          height: size.height * 0.5,
+                          height:
+                              visible ? size.height * 0.25 : size.height * 0.5,
                           width: size.width,
                           color: Colors.white,
                           child: ListView.builder(

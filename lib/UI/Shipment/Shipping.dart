@@ -3,7 +3,6 @@ import 'package:admin/UI/Shipment/bloc/shipping_bloc.dart';
 import 'package:admin/models/ShipmentModel/ShipmentModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class Shipping extends StatefulWidget {
   Shipping({Key key}) : super(key: key);
@@ -21,6 +20,7 @@ class _ShippingState extends State<Shipping> {
   String chosenstatus;
   int pages = 0;
   int ssize = 10;
+  bool issearch = false;
   List<Shipments> orders = [];
 
   @override
@@ -28,12 +28,14 @@ class _ShippingState extends State<Shipping> {
     var size = MediaQuery.of(context).size;
     return BlocProvider(
       create: (context) =>
-          ShippingBloc()..add(GetAllShipEvent('', '', '', pages, ssize)),
+          ShippingBloc()..add(GetAllShipEvent('', '', '', pages, ssize, false)),
       child: Container(
         child: BlocBuilder<ShippingBloc, ShippingState>(
           builder: (context, state) {
             if (state is GetAllShipState) {
               orders = state.shiporders;
+              print("here from the all state ");
+              print(orders.length);
             }
             if (state is ShippingInitial) {
               return Center(
@@ -156,7 +158,12 @@ class _ShippingState extends State<Shipping> {
                                 name != null ||
                                 number != null) {
                               context.read<ShippingBloc>().add(GetAllShipEvent(
-                                  name, number, chosenstatus, pages, ssize));
+                                  name != null ? name : "",
+                                  number != null ? number : "",
+                                  chosenstatus != null ? chosenstatus : "",
+                                  pages,
+                                  ssize,
+                                  true));
                             } else {}
                           },
                           child: Container(
@@ -204,9 +211,8 @@ class _ShippingState extends State<Shipping> {
                         if (name == null &&
                             number == null &&
                             chosenstatus == null) {
-                          context
-                              .read<ShippingBloc>()
-                              .add(GetAllShipEvent('', '', '', pages, ssize));
+                          context.read<ShippingBloc>().add(
+                              GetAllShipEvent('', '', '', pages, ssize, false));
                         } else
                           context.read<ShippingBloc>().add(GetAllShipEvent(
                               name, number, chosenstatus, pages, ssize));
@@ -215,9 +221,8 @@ class _ShippingState extends State<Shipping> {
                       return false;
                     },
                     child: Container(
-                      height: size.height * 0.5,
+                      height: visible ? size.height * 0.25 : size.height * 0.5,
                       width: size.width,
-                      color: Colors.white,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         physics: ScrollPhysics(
@@ -227,8 +232,14 @@ class _ShippingState extends State<Shipping> {
                         itemBuilder: (context, index) => InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ShipmentDetails(
+                                builder: (_) => ShipmentDetails(
                                       orderid: orders[index].id,
+                                      f: () {
+                                        print("here from call back");
+                                        context.read<ShippingBloc>().add(
+                                            GetAllShipEvent(
+                                                '', '', '', pages, ssize));
+                                      },
                                     )));
                           },
                           child: Padding(
