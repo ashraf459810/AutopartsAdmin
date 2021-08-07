@@ -11,6 +11,12 @@ class GetReturnProductsState extends ReturnState {
   GetReturnProductsState(this.getAllReturn, this.requests);
 }
 
+class SearchState extends ReturnState {
+  final GetAllReturn getAllReturn;
+  final List<Content> requests;
+  SearchState(this.getAllReturn, this.requests);
+}
+
 class Loading extends ReturnState {}
 
 class Error extends ReturnState {

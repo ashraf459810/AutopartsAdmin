@@ -44,3 +44,19 @@ class GetShipOrderDetails extends ShippingEvent {
   final int orderid;
   GetShipOrderDetails(this.orderid);
 }
+
+class SearchEvent extends ShippingEvent {
+  final String customername;
+  final String mobile;
+  final String status;
+  final int pages;
+  final int size;
+
+  SearchEvent(
+    this.customername,
+    this.mobile,
+    this.status,
+    this.pages,
+    this.size,
+  );
+}

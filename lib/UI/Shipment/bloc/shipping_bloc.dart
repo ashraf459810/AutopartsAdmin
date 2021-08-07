@@ -17,6 +17,11 @@ class ShippingBloc extends Bloc<ShippingEvent, ShippingState> {
   List<Shipments> shiporders = [];
   List<Shipments> searchorders = [];
   ShipOrderDetails shipOrderDetails;
+  ShipmentModel shipmentModel;
+  String searchname;
+  String searchmobile;
+  String searchstatus;
+  bool firsttime = true;
 
   @override
   Stream<ShippingState> mapEventToState(
@@ -27,23 +32,56 @@ class ShippingBloc extends Bloc<ShippingEvent, ShippingState> {
         var response = await repo.iHttpHlper.getrequest(
             "/order/getorders?customerName=${event.customername}&mobileNumber=${event.mobile}&status=${event.status}&page=${event.pages}&size=${event.size}");
         ShipmentModel shipmentModel = shipmentModelFromJson(response);
-        if (event.issearch == false) {
-          if (shipmentModel.content.isNotEmpty) {
-            for (var i = 0; i < shipmentModel.content.length; i++) {
-              shiporders.add(shipmentModel.content[i]);
-            }
-            yield GetAllShipState(shiporders);
-          }
-        } else if (shipmentModel.content.isNotEmpty) {
+
+        if (shipmentModel.content.isNotEmpty) {
           for (var i = 0; i < shipmentModel.content.length; i++) {
-            searchorders.add(shipmentModel.content[i]);
+            shiporders.add(shipmentModel.content[i]);
           }
-          yield GetAllShipState(searchorders);
+          yield GetAllShipState(shiporders);
         }
       } catch (error) {
         yield Error(error.toString());
       }
     }
+
+    if (event is SearchEvent) {
+      try {
+        var response = await repo.iHttpHlper.getrequest(
+            "/order/getorders?customerName=${event.customername}&mobileNumber=${event.mobile}&status=${event.status}&page=${event.pages}&size=${event.size}");
+        shipmentModel = shipmentModelFromJson(response);
+      } catch (error) {
+        yield Error(error.toString());
+      }
+
+      if (firsttime) {
+        searchname = event.customername;
+        searchmobile = event.mobile;
+        searchstatus = event.status;
+        print(searchname);
+        print(searchmobile);
+        firsttime = false;
+        print("firststime");
+      }
+
+      if (samesearch(event.status, event.customername, event.mobile)) {
+        if (shipmentModel.content.isNotEmpty) {
+          for (var i = 0; i < shipmentModel.content.length; i++) {
+            searchorders.add(shipmentModel.content[i]);
+          }
+          yield GetAllShipState(searchorders);
+        }
+      } else {
+        print("diffrent search");
+        searchorders = [];
+        if (shipmentModel.content.isNotEmpty) {
+          for (var i = 0; i < shipmentModel.content.length; i++) {
+            searchorders.add(shipmentModel.content[i]);
+          }
+          yield GetAllShipState(searchorders);
+        }
+      }
+    }
+
     if (event is PrepareEvent) {
       yield Loading();
       try {
@@ -100,4 +138,33 @@ class ShippingBloc extends Bloc<ShippingEvent, ShippingState> {
       }
     }
   }
+
+  bool samesearch(
+    String status,
+    String name,
+    String mobile,
+  ) {
+    if (searchname == name &&
+        searchmobile == mobile &&
+        searchstatus == status) {
+      print("true form same search");
+      return true;
+    } else {
+      searchname = name;
+      searchmobile = mobile;
+      searchstatus = status;
+
+      return false;
+    }
+  }
+}
+
+List<Shipments> filllist(List<Shipments> list, List<Shipments> apilist) {
+  List<Shipments> filledlist = [];
+  if (apilist.isNotEmpty) {
+    for (var i = 0; i < list.length; i++) {
+      filledlist.add(list[i]);
+    }
+  }
+  return filledlist;
 }

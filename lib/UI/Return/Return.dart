@@ -21,12 +21,11 @@ class _ReturnState extends State<Return> {
   int number;
   int pages = 0;
   int ssize = 12;
+  bool issearch = false;
   ScrollController controller = ScrollController();
   List<Content> returnrequests = [];
   @override
   void initState() {
-    dateTime1 = DateTime.now();
-    dateTime2 = DateTime.now();
     super.initState();
   }
 
@@ -35,7 +34,15 @@ class _ReturnState extends State<Return> {
     var size = MediaQuery.of(context).size;
     return BlocProvider(
       create: (context) => ReturnBloc()
-        ..add(GetReturnProductsEvent("", "", "", 0, pages, "", ssize, false)),
+        ..add(GetReturnProductsEvent(
+          "",
+          "",
+          "",
+          "",
+          pages,
+          "",
+          ssize,
+        )),
       child: Column(
         children: [
           Container(
@@ -84,7 +91,7 @@ class _ReturnState extends State<Return> {
                             border: Border.all(color: Colors.grey)),
                         child: ListTile(
                             title: Text(
-                              "From    ${dateTime1.year}-${dateTime1.month}-${dateTime1.day}",
+                              "From    ",
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -100,7 +107,7 @@ class _ReturnState extends State<Return> {
                             border: Border.all(color: Colors.grey)),
                         child: ListTile(
                           title: Text(
-                            "To         ${dateTime2.year}-${dateTime2.month}-${dateTime2.day}",
+                            "To      ",
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -190,16 +197,21 @@ class _ReturnState extends State<Return> {
                 Builder(
                   builder: (context) => GestureDetector(
                     onTap: () {
-                      print(chosenstatus);
-                      context.read<ReturnBloc>().add(GetReturnProductsEvent(
-                          "${dateTime1.year}-${dateTime1.month}-${dateTime1.day}",
-                          "${dateTime2.year}-${dateTime2.month}-${dateTime2.day}",
-                          name != null ? name : "",
-                          number != null ? number : 0,
-                          pages,
-                          chosenstatus != null ? chosenstatus : "",
-                          ssize,
-                          true));
+                      issearch = true;
+
+                      context.read<ReturnBloc>().add(SearchEvent(
+                            dateTime1 != null
+                                ? "${dateTime1.year}-${dateTime1.month}-${dateTime1.day}"
+                                : "",
+                            dateTime2 != null
+                                ? "${dateTime2.year}-${dateTime2.month}-${dateTime2.day}"
+                                : "",
+                            name != null ? name : "",
+                            number != null ? number : "",
+                            pages,
+                            chosenstatus != null ? chosenstatus : "",
+                            ssize,
+                          ));
                     },
                     child: Container(
                       height: size.height * 0.06,
@@ -253,6 +265,10 @@ class _ReturnState extends State<Return> {
                 returnrequests = state.requests;
                 print(returnrequests.length);
               }
+
+              if (state is SearchState) {
+                returnrequests = state.requests;
+              }
               return NotificationListener<ScrollNotification>(
                   onNotification: (notification) {
                     if (notification is ScrollEndNotification &&
@@ -260,9 +276,35 @@ class _ReturnState extends State<Return> {
                       print("here from listener");
                       pages++;
                       print(pages);
-
-                      context.read<ReturnBloc>().add(GetReturnProductsEvent(
-                          '', '', '', 0, pages, "", ssize, false));
+                      if (issearch) {
+                        context.read<ReturnBloc>().add(SearchEvent(
+                              dateTime1 != null
+                                  ? "${dateTime1.year}-${dateTime1.month}-${dateTime1.day}"
+                                  : "",
+                              dateTime2 != null
+                                  ? "${dateTime2.year}-${dateTime2.month}-${dateTime2.day}"
+                                  : "",
+                              name != null ? name : "",
+                              number != null ? number : "",
+                              pages,
+                              chosenstatus != null ? chosenstatus : "",
+                              ssize,
+                            ));
+                      } else {
+                        context.read<ReturnBloc>().add(GetReturnProductsEvent(
+                              dateTime1 != null
+                                  ? "${dateTime1.year}-${dateTime1.month}-${dateTime1.day}"
+                                  : "",
+                              dateTime2 != null
+                                  ? "${dateTime2.year}-${dateTime2.month}-${dateTime2.day}"
+                                  : "",
+                              name != null ? name : "",
+                              number != null ? number : "",
+                              pages,
+                              chosenstatus != null ? chosenstatus : "",
+                              ssize,
+                            ));
+                      }
                     }
 
                     return false;
@@ -287,7 +329,7 @@ class _ReturnState extends State<Return> {
                                       f: () {
                                         context.read<ReturnBloc>().add(
                                             GetReturnProductsEvent(
-                                                "", "", "", 0, 0, "", 10));
+                                                "", "", "", "", 0, "", 10));
                                       }),
                                 ));
                               },
@@ -350,7 +392,7 @@ class _ReturnState extends State<Return> {
       context: context,
       firstDate: DateTime(DateTime.now().year - 5),
       lastDate: DateTime(DateTime.now().year + 5),
-      initialDate: dateTime1,
+      initialDate: DateTime.now(),
     );
     if (date != null) {
       setState(() {
@@ -364,7 +406,7 @@ class _ReturnState extends State<Return> {
       context: context,
       firstDate: DateTime(DateTime.now().year - 5),
       lastDate: DateTime(DateTime.now().year + 5),
-      initialDate: dateTime2,
+      initialDate: DateTime.now(),
     );
     if (date != null) {
       setState(() {

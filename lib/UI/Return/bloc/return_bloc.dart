@@ -18,11 +18,18 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
   ReturnBloc() : super(ReturnInitial());
   var repo = sl.get<IRepository>();
   ReturnDetails returnDetails;
+  String searchname;
+  String searchmobile;
+  String searchstatus;
+  String date1;
+  String date2;
+  bool firsttime = true;
 
   ReturnRequestModel requestModel;
   ReturnProcessModel returnProcessModel;
   List<Content> requests = [];
   List<Content> serachrequests = [];
+  GetAllReturn getAllReturn;
   @override
   Stream<ReturnState> mapEventToState(
     ReturnEvent event,
@@ -33,23 +40,60 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         var response = await repo.iHttpHlper.getrequest(
             "/order/getreturnproducttodos?status=${event.status}&name=${event.name}&phone=${event.number}&fromDate=${event.date1}&toDate=${event.date2}&page=${event.page}&size=${event.ssize}");
         GetAllReturn getAllReturn = getAllReturnFromJson(response);
-        if (event.issearch == false) {
-          if (getAllReturn.content.isNotEmpty) {
-            for (var i = 0; i < getAllReturn.content.length; i++) {
-              requests.add(getAllReturn.content[i]);
-            }
+
+        if (getAllReturn.content.isNotEmpty) {
+          for (var i = 0; i < getAllReturn.content.length; i++) {
+            requests.add(getAllReturn.content[i]);
           }
-          yield GetReturnProductsState(getAllReturn, requests);
-        } else {
-          if (getAllReturn.content.isNotEmpty) {
-            for (var i = 0; i < getAllReturn.content.length; i++) {
-              serachrequests.add(getAllReturn.content[i]);
-            }
-          }
-          yield GetReturnProductsState(getAllReturn, serachrequests);
         }
+        yield GetReturnProductsState(getAllReturn, requests);
+
+        if (getAllReturn.content.isNotEmpty) {
+          for (var i = 0; i < getAllReturn.content.length; i++) {
+            serachrequests.add(getAllReturn.content[i]);
+          }
+        }
+        yield GetReturnProductsState(getAllReturn, serachrequests);
       } catch (error) {
         yield Error(error.toString());
+      }
+    }
+    if (event is SearchEvent) {
+      try {
+        var response = await repo.iHttpHlper.getrequest(
+            "/order/getreturnproducttodos?status=${event.status}&name=${event.name}&phone=${event.number}&fromDate=${event.date1}&toDate=${event.date2}&page=${event.page}&size=${event.ssize}");
+        getAllReturn = getAllReturnFromJson(response);
+      } catch (error) {
+        yield Error(error.toString());
+      }
+      if (firsttime) {
+        searchname = event.name;
+        searchmobile = event.number;
+        searchstatus = event.status;
+        date1 = event.date1;
+        date2 = event.date2;
+        print(searchname);
+        print(searchmobile);
+        firsttime = false;
+        print("firststime");
+      }
+      if (samesearch(
+          event.status, event.name, event.number, event.date1, event.date2)) {
+        if (getAllReturn.content.isNotEmpty) {
+          for (var i = 0; i < getAllReturn.content.length; i++) {
+            requests.add(getAllReturn.content[i]);
+          }
+          yield SearchState(getAllReturn, getAllReturn.content);
+        }
+      } else {
+        print("diffrent search");
+        requests = [];
+        if (getAllReturn.content.isNotEmpty) {
+          for (var i = 0; i < getAllReturn.content.length; i++) {
+            requests.add(getAllReturn.content[i]);
+          }
+          yield SearchState(getAllReturn, requests);
+        }
       }
     }
     if (event is TalkeToVendorEvent) {
@@ -169,6 +213,26 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       } catch (error) {
         yield Error(error.toString());
       }
+    }
+  }
+
+  bool samesearch(
+      String status, String name, String mobile, String date11, String date22) {
+    if (searchname == name &&
+        searchmobile == mobile &&
+        searchstatus == status &&
+        date11 == date1 &&
+        date22 == date2) {
+      print("true form same search");
+      return true;
+    } else {
+      searchname = name;
+      searchmobile = mobile;
+      searchstatus = status;
+      date1 = date11;
+      date2 = date22;
+
+      return false;
     }
   }
 }

@@ -153,17 +153,18 @@ class _ShippingState extends State<Shipping> {
                       Builder(
                         builder: (context) => GestureDetector(
                           onTap: () {
+                            issearch = true;
                             pages = 0;
                             if (chosenstatus != null ||
                                 name != null ||
                                 number != null) {
-                              context.read<ShippingBloc>().add(GetAllShipEvent(
-                                  name != null ? name : "",
-                                  number != null ? number : "",
-                                  chosenstatus != null ? chosenstatus : "",
-                                  pages,
-                                  ssize,
-                                  true));
+                              context.read<ShippingBloc>().add(SearchEvent(
+                                    name != null ? name : "",
+                                    number != null ? number : "",
+                                    chosenstatus != null ? chosenstatus : "",
+                                    pages,
+                                    ssize,
+                                  ));
                             } else {}
                           },
                           child: Container(
@@ -208,14 +209,21 @@ class _ShippingState extends State<Shipping> {
                         print("here from listener");
                         pages++;
                         print(pages);
-                        if (name == null &&
-                            number == null &&
-                            chosenstatus == null) {
-                          context.read<ShippingBloc>().add(
-                              GetAllShipEvent('', '', '', pages, ssize, false));
-                        } else
-                          context.read<ShippingBloc>().add(GetAllShipEvent(
-                              name, number, chosenstatus, pages, ssize));
+                        issearch
+                            ? context.read<ShippingBloc>().add(SearchEvent(
+                                  name != null ? name : "",
+                                  number != null ? number : "",
+                                  chosenstatus != null ? chosenstatus : "",
+                                  pages,
+                                  ssize,
+                                ))
+                            : context.read<ShippingBloc>().add(GetAllShipEvent(
+                                  name != null ? name : "",
+                                  number != null ? number : "",
+                                  chosenstatus != null ? chosenstatus : "",
+                                  pages,
+                                  ssize,
+                                ));
                       }
 
                       return false;

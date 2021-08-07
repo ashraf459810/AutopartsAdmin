@@ -10,6 +10,12 @@ class GetAllShipState extends ShippingState {
   GetAllShipState(this.shiporders);
 }
 
+class SearchState extends ShippingState {
+  final List<Shipments> shiporders;
+
+  SearchState(this.shiporders);
+}
+
 class Error extends ShippingState {
   final String error;
   Error(this.error);

@@ -6,21 +6,41 @@ abstract class ReturnEvent {}
 class GetReturnProductsEvent extends ReturnEvent {
   final String date1;
   final String date2;
-  final int number;
+  final String number;
   final String status;
   final String name;
   final int page;
   final int ssize;
-  final bool issearch;
-  GetReturnProductsEvent(
-      [this.date1,
-      this.date2,
-      this.name,
-      this.number,
-      this.page,
-      this.status,
-      this.ssize,
-      this.issearch]);
+
+  GetReturnProductsEvent([
+    this.date1,
+    this.date2,
+    this.name,
+    this.number,
+    this.page,
+    this.status,
+    this.ssize,
+  ]);
+}
+
+class SearchEvent extends ReturnEvent {
+  final String date1;
+  final String date2;
+  final String number;
+  final String status;
+  final String name;
+  final int page;
+  final int ssize;
+
+  SearchEvent([
+    this.date1,
+    this.date2,
+    this.name,
+    this.number,
+    this.page,
+    this.status,
+    this.ssize,
+  ]);
 }
 
 class TalkeToVendorEvent extends ReturnEvent {
