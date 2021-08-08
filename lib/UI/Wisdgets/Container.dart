@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+
+class Contaner extends StatefulWidget {
+  Contaner({Key key}) : super(key: key);
+
+  @override
+  _ContanerState createState() => _ContanerState();
+}
+
+class _ContanerState extends State<Contaner> {
+  @override
+  Widget build(BuildContext context) {
+    return container();
+  }
+}
+
+Widget container({
+  double hight,
+  double width,
+  double borderRadius,
+  Color color,
+  Color bordercolor,
+  Widget child,
+  bool shadow,
+}) {
+  return Container(
+    height: hight,
+    width: width,
+    child: Center(child: child),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.all(
+        Radius.circular(borderRadius ?? 0),
+      ),
+      border: Border.all(color: bordercolor ?? Colors.white),
+      boxShadow: [
+        shadow ?? false
+            ? BoxShadow(
+                color: Colors.grey[400].withOpacity(0.5),
+                spreadRadius: 4,
+                blurRadius: 6,
+                offset: Offset(0, 1), // changes position of shadow
+              )
+            : BoxShadow()
+      ],
+      color: color ?? Colors.white,
+    ),
+  );
+}

@@ -1,7 +1,11 @@
 // ignore: must_be_immutable
 import 'package:admin/UI/Login/bloc/signin_bloc.dart';
+import 'package:admin/UI/Wisdgets/Container.dart';
+import 'package:admin/UI/Wisdgets/Dropdown.dart';
+import 'package:admin/UI/Wisdgets/Text.dart';
+
 import 'package:admin/UI/codeVerfication/VerficationCode.dart';
-import 'package:country_picker/country_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,7 +17,9 @@ class SignInTab extends StatefulWidget {
 
 class _SignInTabState extends State<SignInTab> {
   bool selected = false;
-
+  List<Test> lii = [Test(1, "name"), Test(2, "name2"), Test(4, "name4")];
+  var model;
+  String hint = "s";
   String mobileNumber;
 
   final formKey = GlobalKey<FormState>();
@@ -23,6 +29,7 @@ class _SignInTabState extends State<SignInTab> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
+    var chosenvalue;
     return BlocProvider(
         create: (context) => SigninBloc(),
         child: Scaffold(
@@ -170,7 +177,7 @@ class _SignInTabState extends State<SignInTab> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -266,4 +273,10 @@ class _SignInTabState extends State<SignInTab> {
       },
     );
   }
+}
+
+class Test {
+  int id;
+  String name;
+  Test(this.id, this.name);
 }
