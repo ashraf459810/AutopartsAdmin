@@ -1,19 +1,5 @@
 import 'package:flutter/material.dart';
 
-class Contaner extends StatefulWidget {
-  Contaner({Key key}) : super(key: key);
-
-  @override
-  _ContanerState createState() => _ContanerState();
-}
-
-class _ContanerState extends State<Contaner> {
-  @override
-  Widget build(BuildContext context) {
-    return container();
-  }
-}
-
 Widget container({
   double hight,
   double width,
@@ -40,7 +26,7 @@ Widget container({
                 blurRadius: 6,
                 offset: Offset(0, 1), // changes position of shadow
               )
-            : BoxShadow()
+            : BoxShadow(color: Colors.white)
       ],
       color: color ?? Colors.white,
     ),

@@ -1,8 +1,5 @@
 // ignore: must_be_immutable
 import 'package:admin/UI/Login/bloc/signin_bloc.dart';
-import 'package:admin/UI/Wisdgets/Container.dart';
-import 'package:admin/UI/Wisdgets/Dropdown.dart';
-import 'package:admin/UI/Wisdgets/Text.dart';
 
 import 'package:admin/UI/codeVerfication/VerficationCode.dart';
 
@@ -16,20 +13,17 @@ class SignInTab extends StatefulWidget {
 }
 
 class _SignInTabState extends State<SignInTab> {
-  bool selected = false;
-  List<Test> lii = [Test(1, "name"), Test(2, "name2"), Test(4, "name4")];
-  var model;
-  String hint = "s";
   String mobileNumber;
+  TextEditingController controller = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+
   TextEditingController mobileNumbercontroller = TextEditingController();
   FocusNode f1 = FocusNode();
 
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    var chosenvalue;
     return BlocProvider(
         create: (context) => SigninBloc(),
         child: Scaffold(

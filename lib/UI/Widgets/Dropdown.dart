@@ -24,13 +24,13 @@ class _DropDownState extends State<DropDown> {
       items: widget.list.map((dynamic value) {
         return DropdownMenuItem<dynamic>(
           value: value,
-          child: Center(child: new Text(value.name)),
+          child: Center(child: new Text(value)),
         );
       }).toList(),
       onChanged: (value) {
         setState(() {
           widget.onchanged(value);
-          chosenvalue = value.name;
+          chosenvalue = value;
         });
       },
     );
