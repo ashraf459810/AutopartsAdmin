@@ -26,6 +26,7 @@ class RequestsBloc extends Bloc<RequestsEvent, RequestsState> {
   String searchstatus;
   String searchbrand;
   String searchcar;
+
   var offers;
   List<Offers> pagenoffers = [];
   List<QuotationsRequests> pagenquotation = [];
@@ -93,15 +94,15 @@ class RequestsBloc extends Bloc<RequestsEvent, RequestsState> {
     }
 
     if (event is GetoffersForQuotationEvent) {
-      try {
-        quotations = await repo.iHttpHlper.getrequest(
-            '/requestforquotation/getrequestoffers?page=${event.page}&size=${event.size}&requestForQuotation=${event.quotationid}&vendor=${event.vendorname}&status=${event.status}');
-        offers = quotationFromJson(quotations);
-        pagenoffers.addAll(offers.content);
-        yield GetOffersForQuotationState(pagenoffers);
-      } catch (error) {
-        yield Error(error.toString());
-      }
+      // try {
+      offers = await repo.iHttpHlper.getrequest(
+          '/requestforquotation/getrequestoffers?page=${event.page}&size=${event.size}&requestForQuotation=${event.quotationid}&vendor=${event.vendorname}&status=${event.status}');
+      offers = quotationOffersFromJson(offers);
+      pagenoffers.addAll(offers.content);
+      yield GetOffersForQuotationState(pagenoffers);
+      // } catch (error) {
+      //   yield Error(error.toString());
+      // }
     }
   }
 

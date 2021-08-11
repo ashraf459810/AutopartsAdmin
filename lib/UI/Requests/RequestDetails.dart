@@ -24,8 +24,8 @@ class _RequestDetailsState extends State<RequestDetails> {
     var size = MediaQuery.of(context).size;
     return BlocProvider(
       create: (context) => RequestsBloc()
-        ..add(GetoffersForQuotationEvent(pages, widget.quotationsRequests.id,
-            ssize, widget.quotationsRequests.status, ' ')),
+        ..add(GetoffersForQuotationEvent(
+            pages, widget.quotationsRequests.id, ssize, '', '')),
       child: Scaffold(
         body: BlocBuilder<RequestsBloc, RequestsState>(
           builder: (context, state) {
@@ -34,6 +34,11 @@ class _RequestDetailsState extends State<RequestDetails> {
             }
             if (state is GetOffersForQuotationState) {
               offers = state.offers;
+            }
+
+            if (state is Error) {
+              print("here ");
+              return Center(child: text(text: "${state.error}"));
             }
             return Container(
               child: Column(
@@ -99,9 +104,18 @@ class _RequestDetailsState extends State<RequestDetails> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              text(
-                                                  text: "  Offer${index + 1}",
-                                                  color: Colors.blueAccent[400])
+                                              container(
+                                                hight: size.height * 0.06,
+                                                width: size.width * 0.15,
+                                                borderRadius: 20,
+                                                color: Colors.orange,
+                                                child: Center(
+                                                  child: text(
+                                                      text:
+                                                          "  Offer${index + 1}",
+                                                      color: Colors.white),
+                                                ),
+                                              )
                                             ],
                                           ),
                                           SizedBox(
@@ -115,22 +129,22 @@ class _RequestDetailsState extends State<RequestDetails> {
                                             children: [
                                               text(
                                                   text:
-                                                      "${offers[index].vendorName}",
+                                                      "Vendor Name :${offers[index].vendorName}",
                                                   fontsize: 15),
                                               text(
                                                   text:
-                                                      "${offers[index].price}",
+                                                      "Price :${offers[index].price}",
                                                   color: Colors.orange[900]),
                                               text(
                                                   text:
-                                                      "${offers[index].status}",
+                                                      "Status :${offers[index].status}",
                                                   color: Colors.green),
                                               text(
                                                   text:
-                                                      "${offers[index].warrantyMonths}"),
+                                                      "Warranty :${offers[index].warrantyMonths}"),
                                               text(
                                                   text:
-                                                      "${offers[index].daysToDeliver}"),
+                                                      "Days To Delivers :${offers[index].daysToDeliver}"),
                                             ],
                                           )
                                         ],

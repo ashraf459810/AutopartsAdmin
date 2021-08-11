@@ -98,7 +98,7 @@ class Offers {
   String productName;
   ProductCondition productCondition;
   double ourPercentage;
-  int warrantyMonths;
+  double warrantyMonths;
   String vendorMobile;
   double price;
   int id;
