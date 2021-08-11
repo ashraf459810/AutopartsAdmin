@@ -33,7 +33,7 @@ Widget textform(
             ? emailvalidator
             : validation == "number"
                 ? numbervalidator
-                : {},
+                : emptyvalidator,
     expands: true,
     maxLines: null,
     minLines: null,
@@ -72,5 +72,9 @@ String emailvalidator(String value) {
 }
 
 String numbervalidator(String value) {
+  return value;
+}
+
+String emptyvalidator(String value) {
   return value;
 }
