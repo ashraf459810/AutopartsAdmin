@@ -34,3 +34,8 @@ class GetOffersForQuotationState extends RequestsState {
   final List<Offers> offers;
   GetOffersForQuotationState(this.offers);
 }
+
+class FilterOffersState extends RequestsState {
+  final List<Offers> offers;
+  FilterOffersState(this.offers);
+}

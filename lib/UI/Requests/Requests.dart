@@ -1,4 +1,4 @@
-import 'package:admin/UI/Requests/RequestDetails.dart';
+import 'package:admin/UI/Requests/QuotationOffers.dart';
 import 'package:admin/UI/Widgets/Container.dart';
 import 'package:admin/UI/Widgets/Dropdown.dart';
 import 'package:admin/UI/Widgets/Text.dart';
@@ -27,7 +27,7 @@ class _RequestsState extends State<Requests> {
   var num = 1;
   String carid;
   String status;
-  List<QuotationsRequests> quotations;
+  List<QuotationsRequests> quotations = [];
   List<QuotationsRequests> serachquotation = [];
   List<Brands> brands = [];
   List<Cars> cars = [];
@@ -60,6 +60,7 @@ class _RequestsState extends State<Requests> {
           }
           if (state is SerachQuotationState) {
             quotations = state.quotation;
+            print(quotations.length);
           }
           return SingleChildScrollView(
             child: Container(
@@ -152,14 +153,14 @@ class _RequestsState extends State<Requests> {
                                   child: ListView.builder(
                                     controller: controller,
                                     padding: EdgeInsets.only(
-                                      top: 10,
+                                      top: 20,
                                     ),
                                     itemCount: quotations.length,
                                     itemBuilder: (context, index) => InkWell(
                                       onTap: () {
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
-                                          builder: (context) => RequestDetails(
+                                          builder: (context) => QuotationOffers(
                                             quotationsRequests:
                                                 quotations[index],
                                           ),
@@ -183,8 +184,8 @@ class _RequestsState extends State<Requests> {
                                           Column(
                                             children: [
                                               Container(
-                                                  height: size.height * 0.06,
-                                                  width: size.width * 0.2,
+                                                  height: size.height * 0.07,
+                                                  width: size.width * 0.3,
                                                   child: text(
                                                       text:
                                                           "${quotations[index].products[0].name}",
@@ -218,7 +219,7 @@ class _RequestsState extends State<Requests> {
                                     ),
                                   ))),
                         ],
-                      ))
+                      )),
                 ],
               ),
             ),

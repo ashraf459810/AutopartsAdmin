@@ -41,3 +41,13 @@ class GetoffersForQuotationEvent extends RequestsEvent {
   GetoffersForQuotationEvent(
       this.page, this.quotationid, this.size, this.status, this.vendorname);
 }
+
+class FilterOffersEvent extends RequestsEvent {
+  final int page;
+  final int size;
+  final quotationid;
+  final String vendorname;
+  final String status;
+  FilterOffersEvent(
+      this.page, this.quotationid, this.size, this.status, this.vendorname);
+}

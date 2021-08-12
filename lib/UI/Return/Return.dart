@@ -197,6 +197,7 @@ class _ReturnState extends State<Return> {
                 Builder(
                   builder: (context) => GestureDetector(
                     onTap: () {
+                      pages = 0;
                       issearch = true;
 
                       context.read<ReturnBloc>().add(SearchEvent(

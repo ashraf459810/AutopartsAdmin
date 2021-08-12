@@ -6,6 +6,7 @@ import 'package:admin/models/Cars.dart';
 import 'package:admin/models/Quotation.dart';
 import 'package:admin/models/Quotationoffers.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/rendering.dart';
 
 import 'package:meta/meta.dart';
 
@@ -26,11 +27,13 @@ class RequestsBloc extends Bloc<RequestsEvent, RequestsState> {
   String searchstatus;
   String searchbrand;
   String searchcar;
-
+  String filterstatus;
+  String filtervendornameormobile;
   var offers;
   List<Offers> pagenoffers = [];
   List<QuotationsRequests> pagenquotation = [];
   List<QuotationsRequests> pagenserachquotation = [];
+  List<Offers> filteredoffers = [];
   @override
   Stream<RequestsState> mapEventToState(
     RequestsEvent event,
@@ -94,12 +97,31 @@ class RequestsBloc extends Bloc<RequestsEvent, RequestsState> {
     }
 
     if (event is GetoffersForQuotationEvent) {
+      try {
+        offers = await repo.iHttpHlper.getrequest(
+            '/requestforquotation/getrequestoffers?page=${event.page}&size=${event.size}&requestForQuotation=${event.quotationid}&vendor=${event.vendorname}&status=${event.status}');
+        offers = quotationOffersFromJson(offers);
+        pagenoffers.addAll(offers.content);
+        print(pagenoffers.length);
+        yield GetOffersForQuotationState(pagenoffers);
+      } catch (error) {
+        yield Error(error.toString());
+      }
+    }
+    if (event is FilterOffersEvent) {
       // try {
       offers = await repo.iHttpHlper.getrequest(
           '/requestforquotation/getrequestoffers?page=${event.page}&size=${event.size}&requestForQuotation=${event.quotationid}&vendor=${event.vendorname}&status=${event.status}');
-      offers = quotationOffersFromJson(offers);
-      pagenoffers.addAll(offers.content);
-      yield GetOffersForQuotationState(pagenoffers);
+      var response = quotationOffersFromJson(offers);
+      if (samefilter(event.status, event.vendorname)) {
+        print("same search");
+        filteredoffers.addAll(response.content);
+        yield FilterOffersState(filteredoffers);
+      } else {
+        print("diffrent search");
+        filteredoffers = [];
+        yield FilterOffersState(response.content);
+      }
       // } catch (error) {
       //   yield Error(error.toString());
       // }
@@ -123,5 +145,15 @@ class RequestsBloc extends Bloc<RequestsEvent, RequestsState> {
 
       return false;
     }
+  }
+
+  bool samefilter(String status, String vendornameormobile) {
+    if (filterstatus == status &&
+        filtervendornameormobile == vendornameormobile) {
+      return true;
+    } else
+      filterstatus = status;
+    filtervendornameormobile = vendornameormobile;
+    return false;
   }
 }

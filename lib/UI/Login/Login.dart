@@ -27,152 +27,155 @@ class _SignInTabState extends State<SignInTab> {
     return BlocProvider(
         create: (context) => SigninBloc(),
         child: Scaffold(
-          body: Container(
-            child: Column(
-              children: [
-                Container(
-                  height: size.height,
-                  width: size.width,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('lib/assets/login_bg.png'),
-                          fit: BoxFit.fill)),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: size.width,
-                        child: Image.asset(
-                          'lib/assets/logo.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.1,
-                      ),
-                      Card(
-                        child: Container(
-                          height: size.height * 0.13,
-                          width: size.width * 0.9,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: size.height * 0.02),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: size.width * 0.04,
-                                  ),
-                                  Container(
-                                    child: Text(
-                                      'Mobile Number',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.orange[900]),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: size.width * 0.04,
-                                  ),
-                                  SizedBox(
-                                    width: size.width * 0.1,
-                                  ),
-                                  SizedBox(
-                                    child: Container(
-                                        width: size.width * 0.4,
-                                        height: 35,
-                                        alignment: Alignment.centerLeft,
-                                        child: Form(
-                                          key: formKey,
-                                          child: TextFormField(
-                                              validator: (value) {
-                                                if (value.startsWith("0")) {
-                                                  return "no need for the first digit";
-                                                }
-                                                if (value.isEmpty) {
-                                                  return "please fill the number";
-                                                }
-                                                if (value.length > 10) {
-                                                  return "please check number";
-                                                }
-                                                return null;
-                                              },
-                                              focusNode: f1,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              controller:
-                                                  mobileNumbercontroller,
-                                              autofocus: false,
-                                              decoration: InputDecoration(
-                                                contentPadding: EdgeInsets.only(
-                                                    left: 15, bottom: 10),
-                                                border: InputBorder.none,
-                                                hintText: '999999999',
-                                                hintStyle: TextStyle(
-                                                    color: Colors.grey[400],
-                                                    fontSize: 16),
-                                              ),
-                                              onSaved: (newValue) =>
-                                                  mobileNumber = newValue,
-                                              onChanged: (text) {
-                                                setState(() {
-                                                  mobileNumber = text;
-                                                });
-                                              }),
-                                        )),
-                                  ),
-                                ],
-                              ),
-                            ],
+          body: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: [
+                  Container(
+                    height: size.height,
+                    width: size.width,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('lib/assets/login_bg.png'),
+                            fit: BoxFit.fill)),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: size.width,
+                          child: Image.asset(
+                            'lib/assets/logo.png',
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.2,
-                      ),
-                      SizedBox(
-                        height: size.height * 0.03,
-                      ),
-                      SizedBox(
-                        height: 21,
-                      ),
-                      BlocConsumer<SigninBloc, SigninState>(
-                        builder: (context, state) {
-                          if (state is Loading) {
-                            return CircularProgressIndicator();
-                          }
-                          return signButton(size.width);
-                        },
-                        listener: (context, state) {
-                          if (state is Error) {
-                            Fluttertoast.showToast(
-                                msg: state.error,
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
-                          }
-                          if (state is SignInState) {
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                              builder: (context) => VerifyEmailScreen(
-                                mobile: "971" + mobileNumber,
-                              ),
-                            ));
-                          }
-                        },
-                      ),
-                      SizedBox(
-                        height: 35,
-                      ),
-                    ],
+                        SizedBox(
+                          height: size.height * 0.1,
+                        ),
+                        Card(
+                          child: Container(
+                            height: size.height * 0.13,
+                            width: size.width * 0.9,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: size.height * 0.02),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.04,
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        'Mobile Number',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.orange[900]),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.04,
+                                    ),
+                                    SizedBox(
+                                      width: size.width * 0.1,
+                                    ),
+                                    SizedBox(
+                                      child: Container(
+                                          width: size.width * 0.4,
+                                          height: 35,
+                                          alignment: Alignment.centerLeft,
+                                          child: Form(
+                                            key: formKey,
+                                            child: TextFormField(
+                                                validator: (value) {
+                                                  if (value.startsWith("0")) {
+                                                    return "no need for the first digit";
+                                                  }
+                                                  if (value.isEmpty) {
+                                                    return "please fill the number";
+                                                  }
+                                                  if (value.length > 10) {
+                                                    return "please check number";
+                                                  }
+                                                  return null;
+                                                },
+                                                focusNode: f1,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    mobileNumbercontroller,
+                                                autofocus: false,
+                                                decoration: InputDecoration(
+                                                  contentPadding:
+                                                      EdgeInsets.only(
+                                                          left: 15, bottom: 10),
+                                                  border: InputBorder.none,
+                                                  hintText: '999999999',
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.grey[400],
+                                                      fontSize: 16),
+                                                ),
+                                                onSaved: (newValue) =>
+                                                    mobileNumber = newValue,
+                                                onChanged: (text) {
+                                                  setState(() {
+                                                    mobileNumber = text;
+                                                  });
+                                                }),
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.2,
+                        ),
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
+                        SizedBox(
+                          height: 21,
+                        ),
+                        BlocConsumer<SigninBloc, SigninState>(
+                          builder: (context, state) {
+                            if (state is Loading) {
+                              return CircularProgressIndicator();
+                            }
+                            return signButton(size.width);
+                          },
+                          listener: (context, state) {
+                            if (state is Error) {
+                              Fluttertoast.showToast(
+                                  msg: state.error,
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            }
+                            if (state is SignInState) {
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                builder: (context) => VerifyEmailScreen(
+                                  mobile: "971" + mobileNumber,
+                                ),
+                              ));
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 35,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ));

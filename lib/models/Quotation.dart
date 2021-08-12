@@ -210,29 +210,21 @@ class Customer {
   });
 
   int id;
-  FullName fullName;
+  String fullName;
   String mobileNumber;
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         id: json["id"],
-        fullName: fullNameValues.map[json["fullName"]],
+        fullName: json["fullName"],
         mobileNumber: json["mobileNumber"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "fullName": fullNameValues.reverse[fullName],
+        "fullName": fullName,
         "mobileNumber": mobileNumber,
       };
 }
-
-enum FullName { WAEL_NAHHAS, CUSTOMER, TESTING }
-
-final fullNameValues = EnumValues({
-  "customer": FullName.CUSTOMER,
-  "testing ": FullName.TESTING,
-  "wael Nahhas ": FullName.WAEL_NAHHAS
-});
 
 enum ObjectType { REQUEST_FOR_QUOTATION }
 
