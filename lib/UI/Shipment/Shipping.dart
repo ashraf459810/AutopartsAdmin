@@ -42,6 +42,11 @@ class _ShippingState extends State<Shipping> {
                 child: CircularProgressIndicator(),
               );
             }
+            if (state is Error) {
+              return Center(
+                child: Text(state.error),
+              );
+            }
             return Column(
               children: [
                 Container(

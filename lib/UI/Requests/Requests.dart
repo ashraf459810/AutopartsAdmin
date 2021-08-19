@@ -62,6 +62,9 @@ class _RequestsState extends State<Requests> {
             quotations = state.quotation;
             print(quotations.length);
           }
+          if (state is Error) {
+            return Center(child: Text(state.error));
+          }
           return SingleChildScrollView(
             child: Container(
               child: Column(

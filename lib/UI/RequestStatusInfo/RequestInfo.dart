@@ -132,7 +132,7 @@ class _RequestInfoState extends State<RequestInfo> {
                       }
                       if (state.returnRequestModel.status ==
                           "RETURN_PRODUCT_TO_VENDOR") {
-                        returntovendor = true;
+                        // returntovendor = true;
                       }
                       if (state.returnRequestModel.status ==
                           "RETURN_PRODUCT_TO_CUSTOMER") {
@@ -158,10 +158,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           "TAKE_INFO_FROM_VENDOR_AND_ASK_FOR_DISCOUNT") {
                         vendordiscount = true;
                       }
-                      if (state.requestModel.status ==
-                          "RETURN_PRODUCT_TO_VENDOR") {
-                        returntovendor = true;
-                      }
+
                       if (state.requestModel.status ==
                           "RETURN_PRODUCT_TO_CUSTOMER") {
                         returntocustomer = true;

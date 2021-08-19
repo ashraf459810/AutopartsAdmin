@@ -37,8 +37,8 @@ class ShippingBloc extends Bloc<ShippingEvent, ShippingState> {
           for (var i = 0; i < shipmentModel.content.length; i++) {
             shiporders.add(shipmentModel.content[i]);
           }
-          yield GetAllShipState(shiporders);
         }
+        yield GetAllShipState(shiporders);
       } catch (error) {
         yield Error(error.toString());
       }

@@ -105,7 +105,7 @@ class _QuotationOffersState extends State<QuotationOffers> {
                       ),
                     ),
 
-                    !isfilter
+                    isfilter
                         ? Column(
                             children: [
                               SizedBox(

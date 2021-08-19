@@ -6,7 +6,6 @@ import 'package:admin/models/Cars.dart';
 import 'package:admin/models/Quotation.dart';
 import 'package:admin/models/Quotationoffers.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:meta/meta.dart';
 
@@ -109,22 +108,22 @@ class RequestsBloc extends Bloc<RequestsEvent, RequestsState> {
       }
     }
     if (event is FilterOffersEvent) {
-      // try {
-      offers = await repo.iHttpHlper.getrequest(
-          '/requestforquotation/getrequestoffers?page=${event.page}&size=${event.size}&requestForQuotation=${event.quotationid}&vendor=${event.vendorname}&status=${event.status}');
-      var response = quotationOffersFromJson(offers);
-      if (samefilter(event.status, event.vendorname)) {
-        print("same search");
-        filteredoffers.addAll(response.content);
-        yield FilterOffersState(filteredoffers);
-      } else {
-        print("diffrent search");
-        filteredoffers = [];
-        yield FilterOffersState(response.content);
+      try {
+        offers = await repo.iHttpHlper.getrequest(
+            '/requestforquotation/getrequestoffers?page=${event.page}&size=${event.size}&requestForQuotation=${event.quotationid}&vendor=${event.vendorname}&status=${event.status}');
+        var response = quotationOffersFromJson(offers);
+        if (samefilter(event.status, event.vendorname)) {
+          print("same search");
+          filteredoffers.addAll(response.content);
+          yield FilterOffersState(filteredoffers);
+        } else {
+          print("diffrent search");
+          filteredoffers = [];
+          yield FilterOffersState(response.content);
+        }
+      } catch (error) {
+        yield Error(error.toString());
       }
-      // } catch (error) {
-      //   yield Error(error.toString());
-      // }
     }
   }
 

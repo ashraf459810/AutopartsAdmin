@@ -5,7 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
 
 class IHttpHlper implements HttpHelper {
-  final String baseUrl = "http://176.31.225.174:8080/autoparts";
+  final String baseUrl = "http://134.209.78.88:8080/autoparts";
   @override
   Future getrequest(String url) async {
     var responseJson;
