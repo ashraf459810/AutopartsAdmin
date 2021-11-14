@@ -156,6 +156,7 @@ class _SignInTabState extends State<SignInTab> {
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER,
                                   textColor: Colors.white,
+                                  backgroundColor: Colors.orange[900],
                                   fontSize: 16.0);
                             }
                             if (state is SignInState) {
